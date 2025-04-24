@@ -13,3 +13,19 @@ C:\Users\TCHOUA\Documents\ENSC Cours\Programmation\Projet-Potager\projet-ensemen
 C:\Users\TCHOUA\Documents\ENSC Cours\Programmation\Projet-Potager\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.pdb
 C:\Users\TCHOUA\Documents\ENSC Cours\Programmation\Projet-Potager\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.genruntimeconfig.cache
 C:\Users\TCHOUA\Documents\ENSC Cours\Programmation\Projet-Potager\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\ref\Projet2025.dll
+
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\bin\Debug\net9.0\Projet2025.exe
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\bin\Debug\net9.0\Projet2025.deps.json
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\bin\Debug\net9.0\Projet2025.runtimeconfig.json
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\bin\Debug\net9.0\Projet2025.dll
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\bin\Debug\net9.0\Projet2025.pdb
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.AssemblyInfoInputs.cache
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.AssemblyInfo.cs
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.csproj.CoreCompileInputs.cache
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.sourcelink.json
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.dll
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\refint\Projet2025.dll
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.pdb
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\Projet2025.genruntimeconfig.cache
+C:\Users\leava\OneDrive - univ-lyon2.fr\Bureau\ENSC\S6\Sciences Fondamentales\Programmation Avancée\Projet Info\projet-ensemenc-Maire-Tchoua\Projet2025\obj\Debug\net9.0\ref\Projet2025.dll
