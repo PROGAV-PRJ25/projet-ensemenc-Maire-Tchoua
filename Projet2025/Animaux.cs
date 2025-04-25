@@ -1,14 +1,27 @@
 public abstract class Animaux
 {
-    public int NbrPlantesAttaquees {get; set;}
+    
     public enum TypeTerrain {Terre, Argile, Sable}
     public TypeTerrain Habitat {get; set;}
+    public string NomA {get; set;}
+    
 
-    public Animaux(int nbrPlantesAttaquees, TypeTerrain habitat)
+    public Animaux(TypeTerrain habitat, string nomA)
     {
-     
+        NomA = nomA;
         Habitat = habitat;
-        NbrPlantesAttaquees = nbrPlantesAttaquees; 
+         
     }
 
+    public virtual string GetSymboleConsole() // Pas utilisé, permet d'avoir le symbole de l'animal
+    {
+        return NomA switch
+        {
+            "VerDeTerre"  => "🪱",
+            "Criquet" => "🦗",
+            "Oiseaux" => "🐦",
+            "Escargot" => "🐌 ",
+            "Abeille" => "🐝",
+        };
+    }
 }

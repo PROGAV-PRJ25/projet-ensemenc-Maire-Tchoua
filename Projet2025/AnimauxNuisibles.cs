@@ -1,8 +1,10 @@
 public class AnimauxNuisible : Animaux
 {
-    public int Degat {get; set;}
-    public AnimauxNuisible(int nbrPlantesAttaquees, TypeTerrain habitat, int degat) : base(nbrPlantesAttaquees, habitat)
+    public double Degat {get; set;}
+    public AnimauxNuisible(TypeTerrain habitat, string nomA, double degat) : base(habitat, nomA)
     {
         Degat = degat;
     }
+
+    
 }

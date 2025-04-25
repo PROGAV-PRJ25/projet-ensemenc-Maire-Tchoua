@@ -1,6 +1,6 @@
 public class VerDeTerre : AnimauxUtiles
 {
-    public VerDeTerre() : base (nbrPlantesAttaquees : 2, habitat : TypeTerrain.Terre, bienfait : 5 )
+    public VerDeTerre() : base (habitat : TypeTerrain.Terre, nomA : "VerDeTerre", bienfait : 5)
     {
     
     }
