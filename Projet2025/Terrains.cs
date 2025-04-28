@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 public abstract class Terrains {
     
     public int Lignes { get; protected set; }
@@ -8,7 +10,7 @@ public abstract class Terrains {
 
     public Plantes[,] grille;   //Matrice des plantes pour gérer positions et espacement
 
-
+    //public List<Animaux> ListeAnimaux {get; set;} // Liste des animaux pouvant aller sur le terrain
 
     // Constructeur
     protected Terrains(int lignes, int colonnes, Plantes.TypeTerrain type)
@@ -18,7 +20,7 @@ public abstract class Terrains {
         Capacite = Lignes*Colonnes; //pas necessaire?
         Type = type;
         ListePlantes = new List<Plantes>();
-        grille = new Plantes[Lignes,Colonnes];
+        grille = new Plantes [Lignes,Colonnes];
     }
 
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne
@@ -90,6 +92,49 @@ public abstract class Terrains {
         ListePlantes.Remove(plante);
         Console.WriteLine($"Plante {plante.Nom} est morte en ({i},{j}).");
         return true;
+    }
+
+    public void Apparait(Animaux animal) // Un animal apparait sur le terrain
+    {
+        Random rnd = new Random();
+        int posx  = rnd.Next(0, Lignes);
+        int posy = rnd.Next(0, Colonnes);
+        Console.WriteLine($"Un {animal.NomA} est apparut sur votre Terrain");
+        Console.WriteLine($"Il est sur cette position : Ligne={posx}, Colonne={posy}");   
+
+        if(grille[posx,posy] != null && animal is AnimauxNuisible)
+        {
+            Console.WriteLine("Votre plante est en danger !");
+            // Ajouter les dégats 
+            if(animal.NomA == "Escargot") 
+            {
+                foreach (Plantes p in ListePlantes) // Cherche la plante qui est sur la même position que l'animal
+                {
+                    if(p.coordX == posx && p.coordY==posy)
+                    {
+                        Escargot escargot = (Escargot) animal; // Récupère l'information que l'animal est de classe escargot pour appeler la méthode
+                        escargot.Grignotter(p);
+                    }
+                }  
+            }
+            if (animal.NomA == "Criquet") 
+            {
+                foreach (Plantes p in ListePlantes)
+                {
+                    if(p.coordX == posx && p.coordY==posy)
+                    {
+                        Criquet criquet = (Criquet) animal; 
+                        criquet.Affaiblir(p);
+                    }
+                }  
+            }
+        }
+
+        if(grille[posx,posy] != null && animal is AnimauxUtiles)
+        {
+            Console.WriteLine("Votre n'est pas en danger");
+            // Ajouter les bienfaits 
+        }
     }
 
     // Affichage
