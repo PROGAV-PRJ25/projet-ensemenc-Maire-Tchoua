@@ -23,7 +23,8 @@ public abstract class Terrains {
 
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne
     {
-
+        //+ Verifier la saison de semi /!\
+        
         // Vérification des bornes
         if (i < 0 || i >= Lignes || j < 0 || j >= Colonnes)
         {
@@ -68,6 +69,7 @@ public abstract class Terrains {
         }
         
         // Tout est OK, on plante
+        plante.terrainActuel = Type;    //On dit à la plante dans quelle terrain elle est plantée
         plante.coordX = i;  //On récupère les coordonnées dans la classe Plante
         plante.coordY = j;
         grille[i, j] = plante;
