@@ -4,7 +4,11 @@ public class VerDeTerre : AnimauxUtiles
     {
     
     }
-        
+
+    public void Remuer(Plantes plante) 
+    {
+        plante.VitesseCroissance += 0.2;
+    }   
         
     
     

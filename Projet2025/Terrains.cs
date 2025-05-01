@@ -1,7 +1,9 @@
 using System.Runtime.CompilerServices;
 
 public abstract class Terrains {
-    
+    public double Absorption {get;set;}
+    public double NivEau {get; set;}
+    public double CapaciteEauMax {get; set;}
     public int Lignes { get; protected set; }
     public int Colonnes { get; protected set; } 
     public int Capacite {get;} // Nombre de plantes max
@@ -13,7 +15,7 @@ public abstract class Terrains {
     //public List<Animaux> ListeAnimaux {get; set;} // Liste des animaux pouvant aller sur le terrain
 
     // Constructeur
-    protected Terrains(int lignes, int colonnes, Plantes.TypeTerrain type)
+    protected Terrains(int lignes, int colonnes, Plantes.TypeTerrain type, double nivEau, double absorption, double capaciteEauMax)
     {
         Lignes = lignes;
         Colonnes = colonnes;
@@ -21,6 +23,9 @@ public abstract class Terrains {
         Type = type;
         ListePlantes = new List<Plantes>();
         grille = new Plantes [Lignes,Colonnes];
+        NivEau = nivEau;
+        Absorption = absorption;
+        CapaciteEauMax = capaciteEauMax;
     }
 
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne
@@ -97,7 +102,7 @@ public abstract class Terrains {
     public void Apparait(Animaux animal) // Un animal apparait sur le terrain
     {
         Random rnd = new Random();
-        int posx  = rnd.Next(0, Lignes);
+        int posx  = rnd.Next(0, Lignes); // Coordonnées x,y de l'animal
         int posy = rnd.Next(0, Colonnes);
         Console.WriteLine($"Un {animal.NomA} est apparut sur votre Terrain");
         Console.WriteLine($"Il est sur cette position : Ligne={posx}, Colonne={posy}");   
@@ -105,26 +110,36 @@ public abstract class Terrains {
         if(grille[posx,posy] != null && animal is AnimauxNuisible)
         {
             Console.WriteLine("Votre plante est en danger !");
-            // Ajouter les dégats 
-            if(animal.NomA == "Escargot") 
+             
+            if(animal is Escargot escargot) // si l'animal de la classe est un escargot 
             {
                 foreach (Plantes p in ListePlantes) // Cherche la plante qui est sur la même position que l'animal
                 {
-                    if(p.coordX == posx && p.coordY==posy)
+                    if(p.coordX == posx && p.coordY == posy)
                     {
-                        Escargot escargot = (Escargot) animal; // Récupère l'information que l'animal est de classe escargot pour appeler la méthode
-                        escargot.Grignotter(p);
+                        //Escargot escargot = (Escargot) animal; // Récupère l'information que l'animal est de classe escargot pour appeler la méthode
+                        escargot.Grignotter(p); // la plante est grignottée par l'escargot
                     }
                 }  
             }
-            if (animal.NomA == "Criquet") 
+            if (animal is Criquet criquet) 
             {
                 foreach (Plantes p in ListePlantes)
                 {
-                    if(p.coordX == posx && p.coordY==posy)
+                    if(Math.Abs(p.coordX - posx) <= 1 && Math.Abs(p.coordY - posy) <= 1)
                     {
-                        Criquet criquet = (Criquet) animal; 
                         criquet.Affaiblir(p);
+                    }
+                }  
+            }
+
+            if (animal is Oiseaux oiseaux) 
+            {
+                foreach (Plantes p in ListePlantes)
+                {
+                    if(p.coordX == posx && p.coordY == posy)
+                    {
+                        oiseaux.Picorer(p);
                     }
                 }  
             }
@@ -132,8 +147,28 @@ public abstract class Terrains {
 
         if(grille[posx,posy] != null && animal is AnimauxUtiles)
         {
-            Console.WriteLine("Votre n'est pas en danger");
-            // Ajouter les bienfaits 
+            Console.WriteLine("Votre plante n'est pas en danger");
+            if (animal is Abeille abeille) 
+            {
+                foreach (Plantes p in ListePlantes)
+                {
+                    if(Math.Abs(p.coordX - posx) <= 1 && Math.Abs(p.coordY - posy) <= 1)
+                    {
+                        abeille.Butiner(p); // L'abeille butines la plante p et les plantes adjacentes
+                    }
+                }  
+            }
+
+            if (animal is VerDeTerre verDeTerre) 
+            {
+                foreach (Plantes p in ListePlantes)
+                {
+                    if(Math.Abs(p.coordX - posx) <= 1 && Math.Abs(p.coordY - posy) <= 1)
+                    {
+                       verDeTerre.Remuer(p); 
+                    }
+                }  
+            }
         }
     }
 
