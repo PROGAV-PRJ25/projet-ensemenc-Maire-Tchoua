@@ -31,6 +31,8 @@ public abstract class Plantes
     public List<Maladies> ListeMaladies {get; set;}
     public int EsperenceVie {get; set;} // en mois
     public int NbFruitsMax {get; set;} // nb de fruits produits par le semi au maximum
+
+    public double NbFruitsActuel {get; set;} // nombre de fruits lors de la croissance de la plante
     public double CroissanceActuelle {get; set;}
     public int EauDisponible {get; set;}
     public bool EstMalade {get; set;}
@@ -55,6 +57,7 @@ public abstract class Plantes
         NbFruitsMax = nbFruitsMax;
         Nature = nature;
 
+        NbFruitsActuel = 0;
         CroissanceActuelle = 0;
         EauDisponible = 0;
         EstMalade = false;
@@ -68,7 +71,7 @@ public abstract class Plantes
 
      }
 
-     public virtual string GetSymboleConsole()
+    public virtual string GetSymboleConsole()
     {
         //double ratio = CroissanceActuelle / EsperenceVie;
         //if (ratio < 0.33) return "▲";   //plante semée
