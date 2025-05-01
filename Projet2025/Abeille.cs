@@ -5,7 +5,7 @@ public class Abeille : AnimauxUtiles
     
     }
 
-    public void Butine(Plantes plantes)  // Ajoute 4 fruits sinon augmente la taille de la plante
+    public void Butiner(Plantes plantes)  // Ajoute 4 fruits sinon augmente la taille de la plante
     {
         if(plantes.NbFruitsMax != 0)
         {
