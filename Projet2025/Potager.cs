@@ -1,10 +1,10 @@
-public class Jardinier
+public class Potager
 {
     public string Nom { get; }
     public List<Terrains> ListeTerrains { get; }
 
     // Construteur
-    public Jardinier(string nom)
+    public Potager(string nom)
     {
         Nom = nom;
         ListeTerrains = new List<Terrains>();
@@ -26,15 +26,15 @@ public class Jardinier
 
     }
 
-    // Affiche l'état complet du potager
+    // Affiche l'état complet du potager (tous les terrains)
     public void AfficherEtat()
     {
-        Console.WriteLine($"\n=== État du potager de {Nom} ===");
+        Console.WriteLine($"\n=== État du potager {Nom} ===");
         foreach (var terrain in ListeTerrains)
         {
             Console.WriteLine(terrain);
             foreach (var plante in terrain.ListePlantes)
-                Console.WriteLine($"  - {plante.Nom} (croissance : {plante.CroissanceActuelle:F1})");
+                Console.WriteLine($"  - {plante.Nom} (croissance : {plante.croissanceActuelle})");
         }
         Console.WriteLine("===================================\n");
     }

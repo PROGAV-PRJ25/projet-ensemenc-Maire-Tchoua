@@ -6,7 +6,7 @@ public class Fraise : Plantes {
         terrainPref : TypeTerrain.Sable, 
         espacement : 1, 
         place : 1, 
-        vitesseCroissance : 2.5 , 
+        vitesseCroissance : 0.3 , 
         besoinEau : 4, 
         besoinLum : 5, 
         tempMax : 28, 

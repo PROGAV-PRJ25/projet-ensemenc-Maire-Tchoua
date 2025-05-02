@@ -1,7 +1,4 @@
-﻿class Program
-{
-    static void Main(string[] args)
-    {
+﻿
         // 1) Création d’un terrain 5×5
         Terrains terrain = new Terre(5, 5);
 
@@ -26,7 +23,4 @@
 
 
         Console.ReadLine();
-    }
 
-    
-}

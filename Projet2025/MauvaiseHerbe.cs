@@ -9,10 +9,10 @@ public class MauvaiseHerbe : Plantes {
     public MauvaiseHerbe() : base(
         nom : "MauvaiseHerbe", 
         saisonsSemi : ToutesSaisons,
-        terrainPref : TypeTerrain.Terre, //ignoré en propagation
+        terrainPref : TypeTerrain.Terre, //ignoré, pousse sur tous terrain
         espacement : 0, //pas d'espacement requis
         place : 1, 
-        vitesseCroissance : 4.0, //pousse très vite
+        vitesseCroissance : 1, //inutile, pas besoin de temps
         besoinEau : 1, 
         besoinLum : 1, 
         tempMax : 100, 
@@ -22,11 +22,14 @@ public class MauvaiseHerbe : Plantes {
         nbFruitsMax : 0,
         nature : NaturePlante.Annuelle  
         )
-    {}
+    {
+        croissanceActuelle = 1; //Directement mature
+        estMature = true;
+    }
 
     /// Mauvaise herbe se propage rapidement, peut envahir toutes les cases et tuer les autres plantes.
     /// En créer qu'une seule à la fois, méthode pour les propager toutes, après une simulation
-    /// Propager moins vite ????
+    /// /!\ Propager moins vite, une case adjacente à la fois (random)
     public void Propager(Terrains terrain) // Quand elle pousse elle se propage sur les autres cases du terrain
     {
         

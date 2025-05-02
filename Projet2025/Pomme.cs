@@ -6,7 +6,7 @@ public class Pomme : Plantes {
         terrainPref : TypeTerrain.Terre, 
         espacement : 2, 
         place : 1, 
-        vitesseCroissance : 2 , //2 unités de croissance par tour
+        vitesseCroissance : 0.2 , //2 unités de croissance par tour
         besoinEau : 5, 
         besoinLum : 6, 
         tempMax : 30, 
