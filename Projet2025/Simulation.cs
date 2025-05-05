@@ -1,31 +1,35 @@
 public class Simulation {
 
     private bool urgenceActive = false;
-    private Random rnd = new Random();
+    private Random rnd = new Random(); //Pas besoin pour l'instant
     public Plantes.Saisons saisonActuelle;
 
     public Potager Potager { get; }
 
-    // public MeteoMois Météo { get; } -> classe Météo à faire
+    // public Météo MétéoSemaine { get; } -> classe Météo à faire
 
     public DateTime DateCourante { get; private set; } // Date courante dans la simulation (tour = 1 mois)
 
-    public Simulation(Potager potager) //Météo météo
+    public Simulation(Potager potager /*, Météo météoSemaine*/)
     {
         Potager = potager;
-        //Météo = météo;
+        //MétéoSemaine = météoSemaine;
         DateCourante = new DateTime(2025, 1, 1); // date de départ, par ex. 1er janvier 2025
-
     }
 
     private void ModeNormal() // Avance de semaine en semaine
     {
+        // typeMeteo = rnd.Next(1,4);
+        //if (typeMeteo == 1) Meteo.Pleuvoir(Potager)
+        // else if (typeMeteo == 2) Meteo.Soleil(Potager)
+        // else Meteo.Grele(Potager) -> Urgence
+
         Console.Clear();
         Potager.AfficherEtat();
-
-        ContexteSimulation.SaisonEnCours = ObtenirSaison(DateCourante); //MàJ dans ContexteSimulation.cs
         
         saisonActuelle = ObtenirSaison(DateCourante);
+        ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
+
         Console.WriteLine($"Tour du {DateCourante:MMM yyyy} - Saison : {saisonActuelle}");
 
         // Le jeu évolue d'une semaine
@@ -36,6 +40,29 @@ public class Simulation {
         DateCourante = DateCourante.AddDays(7);
 
     }
+
+    /*private void LancerSimulation() // Ou à faire direct dans le Program.cs
+    {
+        Console.WriteLine("La simulation va démarrée !");
+        bool continuer = true;
+        string reponse;
+
+        while (continuer)
+        {
+            if (!urgenceActive)
+            {
+                ModeNormal();
+                Console.WriteLine("Continuer la simulation ?");
+                reponse = Console.ReadLine();
+                if (reponse == "non")
+                { 
+                    continuer = false;
+                }
+                
+
+            }
+        }
+    }*/
 
     public Plantes.Saisons ObtenirSaison(DateTime d)
     {

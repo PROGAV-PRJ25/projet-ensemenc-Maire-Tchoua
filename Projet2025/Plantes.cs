@@ -25,7 +25,7 @@ public abstract class Plantes
     public int Espacement {get; set;} //en nombre de cases
     public int Place {get; set;}    // pareil
     public double VitesseCroissance {get; set;}
-    public int BesoinEau {get; set;} // faire une echelle
+    public int BesoinEau {get; set;} // echelle de 1 à 100
     public int BesoinLum {get; set;}
     public double TempMax {get; set;}
     public double TempMin {get; set;}
@@ -38,7 +38,7 @@ public abstract class Plantes
     public double nbFruitsActuel = 0; // nombre de fruits lors de la croissance de la plante
     public double croissanceActuelle = 0;
     public int ageSemaines = 0; //meme unité qu'un tour
-    public int eauRecu = 0; // A gerer avec la classe Météo
+    public int eauRecu = 0; // A gerer avec la classe Météo OU avec Terrain suivant l'absorption
     public int lumRecu = 0; // A gerer avec la classe Météo
     public int coordX;  // Coordonnées sur le terrain (lorsque la plante est plantée) -> pas utile pour l'instant
     public int coordY;

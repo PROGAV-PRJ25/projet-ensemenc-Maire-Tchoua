@@ -28,8 +28,7 @@ public abstract class Terrains {
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne
     {
         // /!\ Controle de la saison de semi avant de planter
-       
-        var saison = ContexteSimulation.SaisonEnCours;
+        var saison = ContexteSimulation.SaisonEnCours; //Bizarre ça met hiver par défaut ?!
         if (!plante.SaisonsSemi.Contains(saison))
         {
             Console.WriteLine($"{plante.Nom} ne peut être semé en {saison}.");
