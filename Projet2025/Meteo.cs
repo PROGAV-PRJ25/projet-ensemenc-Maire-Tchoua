@@ -30,7 +30,7 @@ public class Meteo
     {
         foreach (Plantes p in terrain.ListePlantes)
         {
-            p.NbFruitsActuel = 0; // Détruit tous les fruits de toutes les plantes du terrain
+            p.nbFruitsActuel = 0; // Détruit tous les fruits de toutes les plantes du terrain
         }
     }
 }
