@@ -9,10 +9,12 @@ public abstract class Terrains {
     public int Capacite {get;} // Nombre de plantes max
     public Plantes.TypeTerrain Type { get; protected set; } // Type de terrain 
     public List<Plantes> ListePlantes {get; set;} // Liste des plantes plantées dans le terrain
+    
+    //public List<Animaux> ListeAnimaux {get; set;} // Liste des animaux actuellement sur le terrain
+
 
     public Plantes[,] grille;   //Matrice des plantes pour gérer positions et espacement
 
-    //public List<Animaux> ListeAnimaux {get; set;} // Liste des animaux pouvant aller sur le terrain
 
     // Constructeur
     protected Terrains(int lignes, int colonnes, Plantes.TypeTerrain type, double nivEau, double absorption, double capaciteEauMax)
@@ -30,7 +32,14 @@ public abstract class Terrains {
 
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne
     {
-
+        // /!\ Controle de la saison de semi avant de planter
+        var saison = ContexteSimulation.SaisonEnCours; //Bizarre ça met hiver par défaut ?!
+        if (!plante.SaisonsSemi.Contains(saison))
+        {
+            Console.WriteLine($"{plante.Nom} ne peut être semé en {saison}.");
+            return false;
+        }
+        
         // Vérification des bornes
         if (i < 0 || i >= Lignes || j < 0 || j >= Colonnes)
         {
@@ -44,14 +53,6 @@ public abstract class Terrains {
             Console.WriteLine("Case déjà occupée.");
             return false;
         }
-
-        // Vérification du type de terrain (à modif ?) -> si pas sur le bon terrain, vitesse de croissance /2 par ex
-        /*
-        if (plante.TerrainPref != Type) 
-        {
-            Console.WriteLine($"Le terrain ({Type}) n'est pas adapté pour {plante.Nom}.");
-            return false;
-        }*/
 
         // Vérification de l'espacement : aucune plante ne doit être à moins de plante.Espacement cases
         // Espacement pour la plante à planter respecté, mais pas pour les plantes qui sont déjà plantées... -> limite
@@ -75,6 +76,7 @@ public abstract class Terrains {
         }
         
         // Tout est OK, on plante
+        plante.terrainActuel = Type;    //On dit à la plante dans quelle terrain elle est plantée
         plante.coordX = i;  //On récupère les coordonnées dans la classe Plante
         plante.coordY = j;
         grille[i, j] = plante;
@@ -90,17 +92,22 @@ public abstract class Terrains {
             return false;              // rien à supprimer
 
         // Retirer les coordonnées dans plantes... ?
+        plante.estMorte = true;
 
         // Retrait de la grille
         grille[i, j] = null;
+
         // Retrait de la liste
         ListePlantes.Remove(plante);
+
         Console.WriteLine($"Plante {plante.Nom} est morte en ({i},{j}).");
+
         return true;
     }
 
     public void Apparait(Animaux animal) // Un animal apparait sur le terrain
     {
+        //Ajouter l'animal dans la list<Animaux> présents sur le terrain
         Random rnd = new Random();
         int posx  = rnd.Next(0, Lignes); // Coordonnées x,y de l'animal
         int posy = rnd.Next(0, Colonnes);
@@ -172,6 +179,15 @@ public abstract class Terrains {
         }
     }
 
+    public void VerifierEtatPlantes() // A lancer après Pousser, pour vérifier si plante morte
+    {
+        foreach (Plantes p in ListePlantes)
+        {
+            if (p.estMorte) // Si la plante est morte (fin de vie) on la supp du terrain
+                SupprimerPlante(p.coordX, p.coordY);
+        }
+    }
+
     // Affichage
     public void AfficherConsole()
     {
@@ -195,7 +211,7 @@ public abstract class Terrains {
             for (int j = 0; j < Colonnes; j++)
             {
                 var p = grille[i, j];
-                string symbole = p != null ? p.GetSymboleConsole() : " . ";
+                string symbole = p != null ? p.GetSymboleConsole() : "   ";
                 Console.Write(symbole + "|");
             }
             Console.WriteLine();

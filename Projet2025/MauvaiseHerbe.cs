@@ -9,10 +9,10 @@ public class MauvaiseHerbe : Plantes {
     public MauvaiseHerbe() : base(
         nom : "MauvaiseHerbe", 
         saisonsSemi : ToutesSaisons,
-        terrainPref : TypeTerrain.Terre, //ignoré en propagation
+        terrainPref : TypeTerrain.Terre, //ignoré, pousse sur tous terrain
         espacement : 0, //pas d'espacement requis
         place : 1, 
-        vitesseCroissance : 4.0, //pousse très vite
+        vitesseCroissance : 1, //inutile, pas besoin de temps
         besoinEau : 1, 
         besoinLum : 1, 
         tempMax : 100, 
@@ -22,18 +22,25 @@ public class MauvaiseHerbe : Plantes {
         nbFruitsMax : 0,
         nature : NaturePlante.Annuelle  
         )
-    {}
+    {
+        croissanceActuelle = 1; //Directement mature
+        estMature = true;
+    }
 
     /// Mauvaise herbe se propage rapidement, peut envahir toutes les cases et tuer les autres plantes.
     /// En créer qu'une seule à la fois, méthode pour les propager toutes, après une simulation
-    /// Propager moins vite ????
+    /// Se propage d'une case adjacente à la fois (aléatoirement)
     public void Propager(Terrains terrain) // Quand elle pousse elle se propage sur les autres cases du terrain
     {
-        
+
         int lignes = terrain.Lignes;
         int colonnes = terrain.Colonnes;
         var aPropager = new List<(int i, int j)>();
-        
+        var rnd = new Random();
+        bool propagationReussie;
+        int newI;
+        int newJ;
+
         // Collecte positions actuelles de mauvaises herbes
         for (int i = 0; i < lignes; i++)
             for (int j = 0; j < colonnes; j++)
@@ -43,24 +50,32 @@ public class MauvaiseHerbe : Plantes {
         // Pour chaque plante, essayer d'envahir les 8 voisins
         foreach (var (i, j) in aPropager)
         {
-            for (int di = -1; di <= 1; di++)
-                for (int dj = -1; dj <= 1; dj++)
+            propagationReussie = false;
+            while (propagationReussie == false)
+            {
+                newI = i + rnd.Next(-1,2);
+                newJ = j + rnd.Next(-1,2);
+
+                if (newI != i || newJ != j) 
                 {
-                    if (di == 0 && dj == 0) continue;
-                    int ni = i + di, nj = j + dj;
-                    // Vérifier bornes et présence
-                    if (ni < 0 || ni >= lignes || nj < 0 || nj >= colonnes) continue;
-                    if (terrain.grille[ni, nj] == null)
+                    if (newI > 0 && newI <= lignes && newJ > 0 && newJ <= colonnes)
                     {
-                        terrain.Planter(new MauvaiseHerbe(), ni, nj);
-                    }
-                    else if (!(terrain.grille[ni, nj] is MauvaiseHerbe))
-                    {
-                        // Tuer la plante existante
-                        terrain.SupprimerPlante(ni, nj);
-                        terrain.Planter(new MauvaiseHerbe(), ni, nj);
+                         // Vérifier bornes et présence
+                        if (terrain.grille[newI, newJ] == null)
+                        {
+                            terrain.Planter(new MauvaiseHerbe(), newI, newJ);
+                        }
+                        else if (!(terrain.grille[newI, newJ] is MauvaiseHerbe))
+                        {
+                            // Tuer la plante existante
+                            terrain.SupprimerPlante(newI, newJ);
+                            terrain.Planter(new MauvaiseHerbe(), newI, newJ);
+                        }
+                        propagationReussie = true;
                     }
                 }
+
+            }
         }
     }
 

@@ -5,9 +5,9 @@ public class Oiseaux : AnimauxNuisible
 
     public void Picorer(Plantes plante) // Mange 2 fruit 
     {
-        if(plante.NbFruitsActuel >= Degat)
+        if(plante.nbFruitsActuel >= Degat)
         {
-            plante.NbFruitsActuel -= Degat;
+            plante.nbFruitsActuel -= Degat;
         }
     }
 }
