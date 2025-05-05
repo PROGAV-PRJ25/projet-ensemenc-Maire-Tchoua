@@ -6,7 +6,7 @@ public abstract class Terrains {
     public double CapaciteEauMax {get; set;}
     public int Lignes { get; protected set; }
     public int Colonnes { get; protected set; } 
-    public int Capacite {get;} // Nombre de plantes max
+    public int Capacite {get;} // Nombre de plantes max (nb de cases)
     public Plantes.TypeTerrain Type { get; protected set; } // Type de terrain 
     public List<Plantes> ListePlantes {get; set;} // Liste des plantes plantées dans le terrain
     

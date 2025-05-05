@@ -19,6 +19,7 @@ public class Potager
 
     public void Arroser(Terrains terrain)
     {
+        //terrain.NivEau +=  -> choisir la quantité
         foreach (Plantes plante in terrain.ListePlantes)
         {
             //augmenter le niveau d'eau de chaque plante

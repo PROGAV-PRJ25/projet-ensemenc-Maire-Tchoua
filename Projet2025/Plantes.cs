@@ -38,8 +38,8 @@ public abstract class Plantes
     public double nbFruitsActuel = 0; // nombre de fruits lors de la croissance de la plante
     public double croissanceActuelle = 0;
     public int ageSemaines = 0; //meme unité qu'un tour
-    public int eauRecu = 0; // A gerer avec la classe Météo OU avec Terrain suivant l'absorption
-    public int lumRecu = 0; // A gerer avec la classe Météo
+    public double eauRecu = 0; // A gerer avec la classe Météo OU avec Terrain suivant l'absorption
+    public double lumRecu = 0; // A gerer avec la classe Météo
     public int coordX;  // Coordonnées sur le terrain (lorsque la plante est plantée) -> pas utile pour l'instant
     public int coordY;
     public TypeTerrain terrainActuel;
@@ -151,9 +151,6 @@ public abstract class Plantes
                 _        => " ★ "
             };
     }
-
-     //Gerer les fin de saisons, plantes vivace vs annuelles
-
 
 
 
