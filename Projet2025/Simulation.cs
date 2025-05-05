@@ -3,6 +3,7 @@ public class Simulation {
     private bool urgenceActive = false;
     private Random rnd = new Random(); //Pas besoin pour l'instant
     public Plantes.Saisons saisonActuelle;
+    public double tempActuelle; 
 
     public Potager Potager { get; }
 

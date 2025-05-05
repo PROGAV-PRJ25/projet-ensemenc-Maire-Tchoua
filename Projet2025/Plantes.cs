@@ -33,12 +33,14 @@ public abstract class Plantes
     public int EsperenceVie {get; set;} // en mois mais à convertir en semaine -> depend de l'unité d'un tour (semaines)
     public int NbFruitsMax {get; set;} // nb de fruits produits par le semi au maximum
 
+    public Saisons SaisonsFruits {get; set;}
+
     //Infos dépendants de la simulation (tours de jeu)
 
     public double nbFruitsActuel = 0; // nombre de fruits lors de la croissance de la plante
     public double croissanceActuelle = 0;
     public int ageSemaines = 0; //meme unité qu'un tour
-    public int eauRecu = 0; // A gerer avec la classe Météo OU avec Terrain suivant l'absorption
+    public double eauRecu = 0; // A gerer avec la classe Météo OU avec Terrain suivant l'absorption
     public int lumRecu = 0; // A gerer avec la classe Météo
     public int coordX;  // Coordonnées sur le terrain (lorsque la plante est plantée) -> pas utile pour l'instant
     public int coordY;
@@ -50,7 +52,7 @@ public abstract class Plantes
     public bool estMorte = false;
 
 
-    protected Plantes(string nom, List<Saisons> saisonsSemi, TypeTerrain terrainPref, int espacement, int place, double vitesseCroissance, int besoinEau, int besoinLum, double tempMax, double tempMin, List<Maladies> listeMaladies, int esperenceVie, int nbFruitsMax, NaturePlante nature) {
+    protected Plantes(string nom, List<Saisons> saisonsSemi, TypeTerrain terrainPref, int espacement, int place, double vitesseCroissance, int besoinEau, int besoinLum, double tempMax, double tempMin, List<Maladies> listeMaladies, int esperenceVie, int nbFruitsMax, NaturePlante nature, Saisons saisonsFruits) {
 
         Nom = nom;
         SaisonsSemi = saisonsSemi;
@@ -66,6 +68,7 @@ public abstract class Plantes
         EsperenceVie = esperenceVie;    
         NbFruitsMax = nbFruitsMax;
         Nature = nature;
+        SaisonsFruits = saisonsFruits;
     }
 
      public virtual void Pousser() //Appelé à chaque tour de jeu (simulation)
@@ -105,6 +108,14 @@ public abstract class Plantes
                 estMalade = false;
                 estMature = false;
             }
+        }
+
+        if(SaisonsFruits == ContexteSimulation.SaisonEnCours && estMature==true && nbFruitsActuel < NbFruitsMax)
+        {
+            if(Nom == "Fraise")
+                nbFruitsActuel += 5;
+            if(Nom == "Pomme")
+                nbFruitsActuel += 2;
         }
      }
 

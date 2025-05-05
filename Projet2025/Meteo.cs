@@ -8,54 +8,74 @@ public class Meteo
         IndiceUV = indiceUV;
     }
 
-    public void Pleuvoir(Terrains terrain) // METTRE POTAGER
+    public void Pleuvoir(Potager potager) 
     {
         Random rnd = new Random();
-        QuantEau = rnd.Next(10,100); // Quantité d'eau tombée sur le terrain
-        terrain.NivEau +=  QuantEau - QuantEau*terrain.Absorption; // Le niveau d'eau danns le terrain augmente selon la quantité d'eau qu'il a absorbé
-        
-        // Gérer la température 
-        if (terrain is Terre && terrain.NivEau > 60)
-        {
-            VerDeTerre verDeTerre = new VerDeTerre();
-            terrain.Apparait(verDeTerre);
-        }
-        if ((terrain is Terre || terrain is Sable) && terrain.NivEau > 90) // Le ver de terre apparait sur du sable ou de la terre très humide
-        {
-            Escargot escargot = new Escargot();
-            terrain.Apparait(escargot);
-        }
-    }
+        QuantEau = rnd.Next(10,101); // Quantité d'eau tombée sur le terrain
 
-    public void Ensoleiller(Terrains terrain) // potager
-    {
-        
-        Random rnd = new Random();
-        IndiceUV  = rnd.Next(5,50);
-        terrain.NivEau -= IndiceUV; // le niveau d'eau du terrain diminue grâce à l'intensité des UV
-        
-        // gérer la température 
-
-        //parcourir la liste des terrains du potager => foreach 
-        if (IndiceUV > 30)
+        foreach (Terrains terrain in potager.ListeTerrains)
         {
-            Abeille abeille = new Abeille();
-            terrain.Apparait(abeille); // une abeille apparait peu importe le terrain 
-        }
+            terrain.NivEau +=  QuantEau - QuantEau*terrain.Absorption; // Le niveau d'eau danns le terrain augmente selon la quantité d'eau qu'il a absorbé
+            foreach (Plantes p in terrain.ListePlantes)
+            {
+                p.eauRecu = terrain.NivEau;
+            }
             
-        if (terrain is Sable && terrain.NivEau < 15) // si le terrain est du sable et qu'il est très sec
-        {
-            Criquet criquet = new Criquet();
-            terrain.Apparait(criquet); // Alors un criquet apparait
-        }     
+            ContexteSimulation.TempEnCours -= 3; // On pert 3 degrés  
+
+            if (terrain is Terre && terrain.NivEau > 60)
+            {
+                VerDeTerre verDeTerre = new VerDeTerre();
+                terrain.Apparait(verDeTerre);
+            }
+            if ((terrain is Terre || terrain is Sable) && terrain.NivEau > 90) // Le ver de terre apparait sur du sable ou de la terre très humide
+            {
+                Escargot escargot = new Escargot();
+                terrain.Apparait(escargot);
+            }
+        }
     }
 
-    public void Greler(Terrains terrain)
+    public void Ensoleiller(Potager potager) // potager
     {
-        // gérer la temperature 
-        foreach (Plantes p in terrain.ListePlantes)
+        Random rnd = new Random();
+        IndiceUV  = rnd.Next(5,51);
+        foreach (Terrains terrain in potager.ListeTerrains) //parcourir la liste des terrains du potager 
         {
-            p.nbFruitsActuel = 0; // Détruit tous les fruits de toutes les plantes du terrain
+            terrain.NivEau -= IndiceUV; // le niveau d'eau du terrain diminue grâce à l'intensité des UV
+            foreach (Plantes p in terrain.ListePlantes)
+            {
+                p.eauRecu = terrain.NivEau; // Récupérer le niveau d'eau de chaque plante 
+            }
+
+            ContexteSimulation.TempEnCours += 3; // On gagne 3 degrés 
+
+            if (IndiceUV > 30)
+            {
+                Abeille abeille = new Abeille();
+                terrain.Apparait(abeille); // une abeille apparait peu importe le terrain 
+            }
+                
+            if (terrain is Sable && terrain.NivEau < 15) // si le terrain est du sable et qu'il est très sec
+            {
+                Criquet criquet = new Criquet();
+                terrain.Apparait(criquet); // Alors un criquet apparait
+            }     
         }
+        
+    }
+
+    public void Greler(Potager potager)
+    {
+        foreach (Terrains terrain in potager.ListeTerrains)
+        {
+            ContexteSimulation.TempEnCours -= 2; // On pert 2 degrés sur tous les terrains 
+
+            foreach (Plantes p in terrain.ListePlantes)
+            {
+                p.nbFruitsActuel = 0; // Détruit tous les fruits de toutes les plantes du terrain
+            } 
+        }
+        
     }
 }

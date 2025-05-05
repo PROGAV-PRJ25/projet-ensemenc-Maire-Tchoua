@@ -13,8 +13,9 @@ public class Pomme : Plantes {
         tempMin : 10, 
         listeMaladies : new List<Maladies>(), 
         esperenceVie : 24, 
-        nbFruitsMax : 50,
-        nature : NaturePlante.Vivace
+        nbFruitsMax : 15,
+        nature : NaturePlante.Vivace,
+        saisonsFruits : Saisons.Eté
         )
     {}
 
