@@ -9,11 +9,11 @@ public class Abeille : AnimauxUtiles
     {
         if(plantes.NbFruitsMax != 0)
         {
-            plantes.NbFruitsActuel += Bienfait;
+            plantes.nbFruitsActuel += Bienfait;
         }
         else
         {
-            plantes.CroissanceActuelle += Bienfait;
+            plantes.croissanceActuelle += Bienfait;
         }
     } 
         
