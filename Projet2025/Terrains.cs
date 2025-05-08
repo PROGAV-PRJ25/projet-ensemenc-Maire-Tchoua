@@ -32,13 +32,14 @@ public abstract class Terrains {
 
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne
     {
+        /*
         // /!\ Controle de la saison de semi avant de planter
         var saison = ContexteSimulation.SaisonEnCours; //Bizarre ça met hiver par défaut ?!
         if (!plante.SaisonsSemi.Contains(saison))
         {
             Console.WriteLine($"{plante.Nom} ne peut être semé en {saison}.");
             return false;
-        }
+        }*/
         
         // Vérification des bornes
         if (i < 0 || i >= Lignes || j < 0 || j >= Colonnes)
@@ -76,8 +77,8 @@ public abstract class Terrains {
         }
         
         // Tout est OK, on plante
-        plante.terrainActuel = Type;    //On dit à la plante dans quelle terrain elle est plantée
-        plante.coordX = i;  //On récupère les coordonnées dans la classe Plante
+        plante.terrainActuel = Type;   // On dit à la plante dans quelle terrain elle est plantée
+        plante.coordX = i;  // On récupère les coordonnées dans la classe Plante
         plante.coordY = j;
         grille[i, j] = plante;
         ListePlantes.Add(plante);

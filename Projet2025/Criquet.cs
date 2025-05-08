@@ -5,6 +5,7 @@ public class Criquet : AnimauxNuisible
 
     public void Affaiblir(Plantes plante) // Divise par 4 la vitesse de croissance de la plante
     {
-        plante.VitesseCroissance /= Degat;
+        if (!plante.estMature)
+            plante.VitesseCroissance /= Degat;
     }
 }

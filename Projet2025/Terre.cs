@@ -4,5 +4,4 @@ public class Terre : Terrains
     {
     }
     
-    // Vous pouvez redéfinir la méthode AjouterPlante ou ToString si besoin.
 }
