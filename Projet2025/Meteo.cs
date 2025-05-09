@@ -20,7 +20,7 @@ public class Meteo
             {
                 p.eauRecu = terrain.NivEau;
             }
-            
+
             ContexteSimulation.TempEnCours -= 3; // On pert 3 degrés  
 
             if (terrain is Terre && terrain.NivEau > 60)
@@ -50,7 +50,7 @@ public class Meteo
 
             ContexteSimulation.TempEnCours += 3; // On gagne 3 degrés 
 
-            if (IndiceUV > 30)
+            if (IndiceUV > 30 && ContexteSimulation.SaisonEnCours != Plantes.Saisons.Hiver) // Pas d'abeille l'hiver
             {
                 Abeille abeille = new Abeille();
                 terrain.Apparait(abeille); // une abeille apparait peu importe le terrain 
