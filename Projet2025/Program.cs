@@ -1,4 +1,17 @@
-﻿
+﻿Potager monPotager = new Potager();
+monPotager.AjouterTerrain(new Terre(5,5));
+
+Meteo maMétéo = new Meteo(0,0);
+
+Simulation maSimu = new Simulation(monPotager, maMétéo, new DateTime(2025, 5, 1));
+
+maSimu.LancerSimulation();
+
+
+
+
+/* Test Mauvaises Herbes
+
 // 1) Création d’un terrain 5×5
 Terrains terrain = new Terre(5, 5);
 
@@ -29,7 +42,7 @@ Console.WriteLine("\n=== Après 2e propagation ===");
 terrain.AfficherConsole();
 
 
-Console.ReadLine();
+Console.ReadLine();*/
 
 
 

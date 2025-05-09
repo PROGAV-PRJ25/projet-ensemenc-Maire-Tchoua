@@ -20,7 +20,8 @@ public class MauvaiseHerbe : Plantes {
         listeMaladies : new List<Maladies>(), 
         esperenceVie : 12, 
         nbFruitsMax : 0,
-        nature : NaturePlante.Annuelle  
+        nature : NaturePlante.Annuelle,  
+        saisonFruits : Saisons.Hiver    //ignoré ne donne pas de fruits
         )
     {
         croissanceActuelle = 1; //Directement mature

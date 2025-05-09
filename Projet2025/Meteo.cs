@@ -1,27 +1,29 @@
 public class Meteo
 { 
     public int QuantEau {get;set;}
-    public int IndiceUV {get; set;}
-    public Meteo(int quantEau, int indiceUV)
+    public int QuantLum {get; set;}
+    public Meteo(int quantEau, int quantLum)
     {
         QuantEau = quantEau;
-        IndiceUV = indiceUV;
+        QuantLum = quantLum;
     }
 
     public void Pleuvoir(Potager potager) 
     {
         Random rnd = new Random();
-        QuantEau = rnd.Next(10,101); // Quantité d'eau tombée sur le terrain
+        QuantEau = rnd.Next(10,101); // Quantité d'eau tombée sur le potager
+        QuantLum = rnd.Next(0,15); // Quantité de lum reçue sur le potager
 
         foreach (Terrains terrain in potager.ListeTerrains)
         {
             terrain.NivEau +=  QuantEau - QuantEau*terrain.Absorption; // Le niveau d'eau danns le terrain augmente selon la quantité d'eau qu'il a absorbé
             foreach (Plantes p in terrain.ListePlantes)
             {
-                p.eauRecu = terrain.NivEau;
+                p.eauRecu = terrain.NivEau; // L'eau recu par la plante correspond au niveau d'eau restant dans le terrain
+                p.lumRecu = QuantLum;
             }
-
-            ContexteSimulation.TempEnCours -= 3; // On pert 3 degrés  
+            
+            ContexteSimulation.TempEnCours -= 3; // On pert 3 degrés quand il pleut
 
             if (terrain is Terre && terrain.NivEau > 60)
             {
@@ -33,24 +35,28 @@ public class Meteo
                 Escargot escargot = new Escargot();
                 terrain.Apparait(escargot);
             }
+
+            terrain.NivEau = terrain.NivEau*0.5;    // On baisse le niveau d'eau après que les plantes ait bu
+
         }
     }
 
     public void Ensoleiller(Potager potager) // potager
     {
         Random rnd = new Random();
-        IndiceUV  = rnd.Next(5,51);
+        QuantLum  = rnd.Next(15,75);
         foreach (Terrains terrain in potager.ListeTerrains) //parcourir la liste des terrains du potager 
         {
-            terrain.NivEau -= IndiceUV; // le niveau d'eau du terrain diminue grâce à l'intensité des UV
+            terrain.NivEau -= 0.5*QuantLum; // le niveau d'eau du terrain diminue avec l'intensité de la lumière (évaporation)
             foreach (Plantes p in terrain.ListePlantes)
             {
                 p.eauRecu = terrain.NivEau; // Récupérer le niveau d'eau de chaque plante 
+                p.lumRecu = QuantLum;
             }
 
-            ContexteSimulation.TempEnCours += 3; // On gagne 3 degrés 
+            ContexteSimulation.TempEnCours += 3; // On gagne 3 degrés avec le soleil
 
-            if (IndiceUV > 30 && ContexteSimulation.SaisonEnCours != Plantes.Saisons.Hiver) // Pas d'abeille l'hiver
+            if (QuantLum > 30)
             {
                 Abeille abeille = new Abeille();
                 terrain.Apparait(abeille); // une abeille apparait peu importe le terrain 
@@ -69,11 +75,12 @@ public class Meteo
     {
         foreach (Terrains terrain in potager.ListeTerrains)
         {
-            ContexteSimulation.TempEnCours -= 2; // On pert 2 degrés sur tous les terrains 
+            ContexteSimulation.TempEnCours -= 2; // On pert 2 degrés
 
             foreach (Plantes p in terrain.ListePlantes)
             {
-                p.nbFruitsActuel = 0; // Détruit tous les fruits de toutes les plantes du terrain
+                if (p.nbFruitsActuel >= 2)
+                    p.nbFruitsActuel -= 2; // Détruit des fruits
             } 
         }
         

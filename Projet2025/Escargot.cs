@@ -6,7 +6,10 @@ public class Escargot : AnimauxNuisible
 
     public void Grignotter(Plantes plante) // L'escargot réduit la taille de la plante
     {
-        plante.croissanceActuelle -= Degat;
-        Console.WriteLine("Votre plante grandit moins vite");
+        if (!plante.estMature)
+        {
+            plante.croissanceActuelle -= Degat;
+            Console.WriteLine("Votre plante grandit moins vite");
+        }
     }
 }

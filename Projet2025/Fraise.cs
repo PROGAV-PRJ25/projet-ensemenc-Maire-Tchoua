@@ -6,16 +6,16 @@ public class Fraise : Plantes {
         terrainPref : TypeTerrain.Sable, 
         espacement : 1, 
         place : 1, 
-        vitesseCroissance : 0.3 , 
+        vitesseCroissance : 0.3, 
         besoinEau : 40, 
         besoinLum : 50, 
         tempMax : 28, 
         tempMin : 12, 
         listeMaladies : new List<Maladies>(), 
         esperenceVie : 14, 
-        nbFruitsMax : 10,
+        nbFruitsMax : 100,
         nature : NaturePlante.Vivace,
-        saisonsFruits : Saisons.Printemps
+        saisonFruits : Saisons.Printemps
         )
     {}
 

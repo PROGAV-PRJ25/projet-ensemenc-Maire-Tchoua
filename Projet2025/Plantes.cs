@@ -32,8 +32,8 @@ public abstract class Plantes
     public List<Maladies> ListeMaladies {get; set;}
     public int EsperenceVie {get; set;} // en mois mais à convertir en semaine -> depend de l'unité d'un tour (semaines)
     public int NbFruitsMax {get; set;} // nb de fruits produits par le semi au maximum
+    public Saisons SaisonFruits {get; set;} // Saison durant laquelle poussent les fruits
 
-    public Saisons SaisonsFruits {get; set;}
 
     //Infos dépendants de la simulation (tours de jeu)
 
@@ -41,7 +41,7 @@ public abstract class Plantes
     public double croissanceActuelle = 0;
     public int ageSemaines = 0; //meme unité qu'un tour
     public double eauRecu = 0; // A gerer avec la classe Météo OU avec Terrain suivant l'absorption
-    public int lumRecu = 0; // A gerer avec la classe Météo
+    public double lumRecu = 0; // A gerer avec la classe Météo
     public int coordX;  // Coordonnées sur le terrain (lorsque la plante est plantée) -> pas utile pour l'instant
     public int coordY;
     public TypeTerrain terrainActuel;
@@ -51,8 +51,7 @@ public abstract class Plantes
     public bool estMature = false;
     public bool estMorte = false;
 
-
-    protected Plantes(string nom, List<Saisons> saisonsSemi, TypeTerrain terrainPref, int espacement, int place, double vitesseCroissance, int besoinEau, int besoinLum, double tempMax, double tempMin, List<Maladies> listeMaladies, int esperenceVie, int nbFruitsMax, NaturePlante nature, Saisons saisonsFruits) {
+    protected Plantes(string nom, List<Saisons> saisonsSemi, TypeTerrain terrainPref, int espacement, int place, double vitesseCroissance, int besoinEau, int besoinLum, double tempMax, double tempMin, List<Maladies> listeMaladies, int esperenceVie, int nbFruitsMax, NaturePlante nature, Saisons saisonFruits) {
 
         Nom = nom;
         SaisonsSemi = saisonsSemi;
@@ -60,7 +59,7 @@ public abstract class Plantes
         Espacement = espacement;
         Place = place;
         VitesseCroissance = vitesseCroissance;  //en unite/tour
-        BesoinEau = besoinEau;  //echelle sur 10
+        BesoinEau = besoinEau;  //echelle sur 100
         BesoinLum = besoinLum;
         TempMax = tempMax;
         TempMin = tempMin;
@@ -68,7 +67,7 @@ public abstract class Plantes
         EsperenceVie = esperenceVie;    
         NbFruitsMax = nbFruitsMax;
         Nature = nature;
-        SaisonsFruits = saisonsFruits;
+        SaisonFruits = saisonFruits;
     }
 
      public virtual void Pousser() //Appelé à chaque tour de jeu (simulation)
@@ -107,16 +106,18 @@ public abstract class Plantes
                 ageSemaines = 0;
                 estMalade = false;
                 estMature = false;
+                Console.WriteLine($"{Nom} est en fin de vie mais comme elle est vivace, elle reprend sa croissance depuis le début.");
             }
         }
 
-        if(SaisonsFruits == ContexteSimulation.SaisonEnCours && estMature==true && nbFruitsActuel < NbFruitsMax)
+        /*if (SaisonFruits == ContexteSimulation.SaisonEnCours && estMature==true && nbFruitsActuel < NbFruitsMax)
         {
             if(Nom == "Fraise")
-                nbFruitsActuel += 5;
+                nbFruitsActuel += 5;    //Si les conditions sont remplies, à chaque tours il peut pousser 5 fraises
+
             if(Nom == "Pomme")
-                nbFruitsActuel += 2;
-        }
+                nbFruitsActuel += 2;    //Si les conditions sont remplies, à chaque tours il peut pousser 2 pommes
+        }*/
      }
 
      public virtual bool VerifierConditionsPref()   // (de pousse)
@@ -124,6 +125,7 @@ public abstract class Plantes
         int nbConditionsValides = 0;    //Faire le ration sur le nb de conditions totales à valider : besoin en eau et lumière, terrain pref, temp pref, 
         int nbConditionsMax = 4;
         double ratio;
+        tempActuelle = ContexteSimulation.TempEnCours;
 
         if (terrainActuel == TerrainPref)   //Terrain OK
             nbConditionsValides ++;
@@ -147,10 +149,10 @@ public abstract class Plantes
 
     public virtual string GetSymboleConsole()
     {
-        if (croissanceActuelle == 0) 
+        if (croissanceActuelle < 0.5) 
             return " . ";   //plante juste semée
         
-        if (croissanceActuelle < 0.8) 
+        else if (croissanceActuelle < 1) 
             return $" {Nom[0]} ";   // initiale de la plante
         
         else // maturité → fruit ou plante adulte (croissanceActuelle >= 1)
@@ -162,9 +164,6 @@ public abstract class Plantes
                 _        => " ★ "
             };
     }
-
-     //Gerer les fin de saisons, plantes vivace vs annuelles
-
 
 
 
