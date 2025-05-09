@@ -1,3 +1,5 @@
+using System.Security.Cryptography.X509Certificates;
+
 public class Simulation {
 
     private bool urgenceActive = false;
@@ -69,7 +71,7 @@ public class Simulation {
             if (!urgenceActive)
             {
                 Console.WriteLine("Continuer la simulation ?");
-                reponse = Console.ReadLine();
+                reponse = Console.ReadLine()!;
                 if (reponse == "non" || reponse == "Non")
                 { 
                     continuer = false;
@@ -346,8 +348,28 @@ public class Simulation {
 
         }
 
-        if (choix == 5) //Recolter un fruit
+        if (choix == 5) //Recolter des fruits sur un terrain
         {
+            bool idxValide = true;
+            int index;
+            
+            Console.Write("Numéro du terrain sur lequel vous voulez recolter des fruits : ");
+            do
+            {
+                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index <= PotagerSimu.ListeTerrains.Count)
+                {
+                    idxValide = true;
+                }
+                else
+                {
+                    idxValide = false;
+                    Console.Write("Index invalide, entrez un nouveau numéro : ");
+                }
+
+            } while (!idxValide);
+            Terrains terrain = PotagerSimu.ListeTerrains[index];   // On recupère le terrain choisi
+
+            PotagerSimu.Recolter(terrain);
 
         }
 

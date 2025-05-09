@@ -4,11 +4,15 @@ public class Potager
     public List<Terrains> ListeTerrains { get; }
 
 
+    public double ReserveFraise {get; set;} // Nombre de fruits dans la reserve
+    public double ReservePomme {get; set;}
     // Construteur
     public Potager()
     {
         //Nom = nom;
         ListeTerrains = new List<Terrains>();
+        ReserveFraise = 0;
+        ReservePomme = 0;
     }
 
     // Actions du joueur sur son potager
@@ -62,12 +66,14 @@ public class Potager
                 else
                     Console.Write($"croissance terminée (plante mature), ");
                 
-                Console.Write($"besoin en eau : {plante.eauRecu/plante.BesoinEau}, "); //SI ratio négatif -> arroser
+                //Console.Write($"besoin en eau : {plante.eauRecu/plante.BesoinEau}, ");
+                Console.Write($"besoin en eau : {plante.BesoinEau - plante.eauRecu}, "); //SI ratio négatif -> arroser
 
                 //Nb de fruits donnés
                 Console.Write($"nombre de fruits : {plante.nbFruitsActuel}. \n");
 
             }
+            Console.WriteLine($"Nombre de fruits dans la réserve : {ReserveFraise} fraises, {ReservePomme} pommes");
         }
     }
 
@@ -80,4 +86,41 @@ public class Potager
             foreach (var plante in terrain.ListePlantes)
                 plante.Pousser();
     }*/
+
+    public void Recolter(Terrains terrain)
+    {   
+        double nbrFraiseRecolte = 0;
+        double nbrPommeRecolte = 0;
+
+        Console.WriteLine("Quel type de fruits voulez-vous récolter (pomme, fraise) ?");
+        string typeFruits = Console.ReadLine()!.ToLower(); 
+
+        foreach( Plantes p in terrain.ListePlantes) 
+        {
+            if(p.nbFruitsActuel != 0)
+            {
+                if(p is Fraise && typeFruits =="fraise")
+                {
+                    nbrFraiseRecolte += p.nbFruitsActuel;
+                    p.nbFruitsActuel = 0; 
+                }
+
+                if(p is Pomme && typeFruits == "pomme")
+                {
+                    nbrPommeRecolte += p.nbFruitsActuel;
+                    p.nbFruitsActuel = 0; 
+                }                    
+            }           
+        }
+        if (nbrFraiseRecolte == 0 && typeFruits == "fraise")
+                Console.WriteLine("Il n'y a pas de fraises à récolter sur ce terrain");
+        if (nbrPommeRecolte == 0 && typeFruits == "pomme")
+            Console.WriteLine("Il n'y a pas de pommes à récolter sur ce terrain");
+
+        Console.WriteLine($"Vous avez récolté {nbrPommeRecolte} pommes et {nbrFraiseRecolte} fraises sur ce terrain");
+
+        ReserveFraise += nbrFraiseRecolte;
+        ReservePomme += nbrPommeRecolte;
+        
+    }
 }
