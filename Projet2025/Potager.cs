@@ -61,10 +61,10 @@ public class Potager
                     Console.Write("En bonne santé, ");
 
                 //Croissance
-                if (!plante.estMature)
-                    Console.Write($"croissance de {plante.croissanceActuelle}, ");
-                else
+                if (plante.croissanceActuelle > 1)
                     Console.Write($"croissance terminée (plante mature), ");
+                else
+                    Console.Write($"croissance de {plante.croissanceActuelle}, ");
                 
                 //Console.Write($"besoin en eau : {plante.eauRecu/plante.BesoinEau}, ");
                 Console.Write($"besoin en eau : {plante.BesoinEau - plante.eauRecu}, "); //SI ratio négatif -> arroser
@@ -120,7 +120,8 @@ public class Potager
         Console.WriteLine($"Vous avez récolté {nbrPommeRecolte} pommes et {nbrFraiseRecolte} fraises sur ce terrain");
 
         ReserveFraise += nbrFraiseRecolte;
-        ReservePomme += nbrPommeRecolte;
-        
+        ReservePomme += nbrPommeRecolte;  
     }
+
+
 }

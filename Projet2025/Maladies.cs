@@ -1,4 +1,4 @@
-public class Maladies {
+public abstract class Maladies {
 
     public string Nom {get; set;}
     public double ProbabiliteContamination { get; set; }

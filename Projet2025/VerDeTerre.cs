@@ -7,8 +7,8 @@ public class VerDeTerre : AnimauxUtiles
 
     public void Remuer(Plantes plante) 
     {
-        if (!plante.estMature)
-            plante.VitesseCroissance += 0.2;    //Plante pousse + vite
+        plante.VitesseCroissance += 0.2;    //Plante pousse + vite
+        Console.WriteLine("La plante pousse moins vite");
     }   
         
     
