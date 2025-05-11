@@ -1,13 +1,23 @@
 public class Oiseaux : AnimauxNuisible
 {
-    public Oiseaux() : base(TypeTerrain.Argile, nomA : "Oiseaux", degat : 2)
+    public Oiseaux() : base(nomA : "Oiseaux", degat : 2)
     {}
 
-    public void Picorer(Plantes plante) // Mange 2 fruit 
+    public override void Nuire(Terrains terrain) // Mange 2 fruit 
     {
-        if(plante.nbFruitsActuel >= Degat)
+        foreach (Plantes p in terrain.ListePlantes)
         {
-            plante.nbFruitsActuel -= Degat;
+            if (p.coordX == posX && p.coordY == posY)
+            {
+                if (!p.estMature)
+                {
+                    if(p.nbFruitsActuel >= Degat)
+                    {
+                        p.nbFruitsActuel -= Degat;
+                    }
+                }
+            }
         }
+       
     }
 }

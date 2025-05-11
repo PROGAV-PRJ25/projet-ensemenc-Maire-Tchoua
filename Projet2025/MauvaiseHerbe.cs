@@ -31,7 +31,7 @@ public class MauvaiseHerbe : Plantes {
     /// Mauvaise herbe se propage rapidement, peut envahir toutes les cases et tuer les autres plantes.
     /// En créer qu'une seule à la fois, méthode pour les propager toutes, après une simulation
     /// Se propage d'une case adjacente à la fois (aléatoirement)
-    public void Propager(Terrains terrain) // Quand elle pousse elle se propage sur les autres cases du terrain
+    public void Pousser(Terrains terrain) // Quand elle pousse elle se propage sur les autres cases du terrain
     {
 
         int lignes = terrain.Lignes;

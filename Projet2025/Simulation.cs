@@ -184,7 +184,7 @@ public class Simulation {
             Console.Write("Numéro du terrain à arroser : ");
             do
             {
-                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index <= PotagerSimu.ListeTerrains.Count)
+                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
                 {
                     idxValide = true;
                 }
@@ -271,7 +271,7 @@ public class Simulation {
             Console.Write("Numéro du terrain sur lequel planter : ");
             do
             {
-                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index <= PotagerSimu.ListeTerrains.Count)
+                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
                 {
                     idxValide = true;
                 }
