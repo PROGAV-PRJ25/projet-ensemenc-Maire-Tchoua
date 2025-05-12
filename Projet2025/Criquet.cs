@@ -1,11 +1,19 @@
 public class Criquet : AnimauxNuisible
 {
-    public Criquet() : base(TypeTerrain.Sable, nomA : "Criquet", degat : 4)
+    public Criquet() : base(nomA : "Criquet", degat : 4)
     {}
 
-    public void Affaiblir(Plantes plante) // Divise par 4 la vitesse de croissance de la plante
+    public override void Nuire(Terrains terrain) // Divise par 4 la vitesse de croissance de la plante
     {
-        if (!plante.estMature)
-            plante.VitesseCroissance /= Degat;
+        foreach (Plantes p in terrain.ListePlantes)
+        {
+            if(Math.Abs(p.coordX - posX) <= 1 && Math.Abs(p.coordY - posY) <= 1)
+            {
+                if (!p.estMature)
+                    p.VitesseCroissance /= Degat;
+            }
+        }  
+
+        
     }
 }

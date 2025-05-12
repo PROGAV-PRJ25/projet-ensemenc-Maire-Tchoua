@@ -1,14 +1,21 @@
 public class VerDeTerre : AnimauxUtiles
 {
-    public VerDeTerre() : base (habitat : TypeTerrain.Terre, nomA : "VerDeTerre", bienfait : 5)
+    public VerDeTerre() : base (nomA : "VerDeTerre", bienfait : 2)
     {
     
     }
 
-    public void Remuer(Plantes plante) 
+    public override void Aider(Terrains terrain) 
     {
-        if (!plante.estMature)
-            plante.VitesseCroissance += 0.2;    //Plante pousse + vite
+        foreach (Plantes p in terrain.ListePlantes)
+        {
+            if(Math.Abs(p.coordX - posX) <= 1 && Math.Abs(p.coordY - posY) <= 1)
+            {
+                if (!p.estMature)
+                    p.VitesseCroissance += Bienfait/10 ;    //Plante pousse + vite (0.2)
+            }
+        } 
+        
     }   
         
     

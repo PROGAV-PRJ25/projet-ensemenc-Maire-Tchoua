@@ -1,15 +1,21 @@
 public class Escargot : AnimauxNuisible
 {
 
-    public Escargot() : base(TypeTerrain.Terre, nomA : "Escargot", degat : 0.5)
+    public Escargot() : base(nomA : "Escargot", degat : 0.5)
     {}
 
-    public void Grignotter(Plantes plante) // L'escargot réduit la taille de la plante
+    public override void Nuire(Terrains terrain) // L'escargot réduit la taille de la plante
     {
-        if (!plante.estMature)
+        foreach (Plantes p in terrain.ListePlantes)
         {
-            plante.croissanceActuelle -= Degat;
-            Console.WriteLine("Votre plante grandit moins vite");
+            if (p.coordX == posX && p.coordY == posY) // Cherche la plante qui est sur la même position que l'animal
+            {
+                if (!p.estMature)
+                {
+                    p.croissanceActuelle -= Degat;
+                    Console.WriteLine("Votre plante grandit moins vite");
+                }
+            }
         }
     }
 }
