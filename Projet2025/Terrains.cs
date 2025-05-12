@@ -9,7 +9,10 @@ public abstract class Terrains {
     public int Capacite {get;} // Nombre de plantes max (nb de cases)
     public Plantes.TypeTerrain Type { get; protected set; } // Type de terrain 
     public List<Plantes> ListePlantes {get; set;} // Liste des plantes plantées dans le terrain
-    public List<Animaux> ListeAnimaux {get; set;} // Liste des animaux actuellement sur le terrain
+    
+    //public List<AnimauxNuisible> ListeAnimauxNuisibles {get; set;} // Liste des animaux actuellement sur le terrain
+    //public List<AnimauxUtiles> ListeAnimauxUtiles {get; set;} // Liste des animaux actuellement sur le terrain
+
 
 
     public Plantes[,] grille;   //Matrice des plantes pour gérer positions et espacement

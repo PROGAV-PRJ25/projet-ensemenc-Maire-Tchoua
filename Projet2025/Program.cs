@@ -3,7 +3,7 @@ monPotager.AjouterTerrain(new Terre(5,5));
 
 Meteo maMétéo = new Meteo(0,0);
 
-Simulation maSimu = new Simulation(monPotager, maMétéo, new DateTime(2025, 5, 1));
+Simulation maSimu = new Simulation(monPotager, maMétéo, new DateTime(2025, 3, 1)); //début du printemps
 
 maSimu.LancerSimulation();
 

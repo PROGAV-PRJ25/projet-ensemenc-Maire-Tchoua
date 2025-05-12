@@ -153,210 +153,285 @@ public class Simulation {
         
         bool choixValide = true;
         int choix = 0;
+        int comptActions = 0; 
+        int nbActionsMax = 3*PotagerSimu.ListeTerrains.Count(); // nb actions max par tours proportinnel au nb de terrains dans le potager
+        bool maxAtteint = false; 
 
         Console.WriteLine("- Menu d'actions -");
-        Console.WriteLine("1) Arroser un terrain, 2) Planter une plante, 3) Ajouter un terrain, 4) Traiter une maladie, 5) Récolter un fruit, 6) Passer la semaine");   // + eloigner les animaux ?? recouvrir un terrain ??
+        Console.WriteLine($"Vous pouvez effectuer {nbActionsMax} actions maximum sur ce tour.");
+        Console.WriteLine("1) Arroser un terrain, 2) Planter une plante, 3) Ajouter un terrain, 4) Récolter un fruit, 5) Passer la semaine");   // + eloigner les animaux ?? recouvrir un terrain ??
         Console.WriteLine("Entrez le numéro de votre choix :");
 
         do
         {
-            string reponse = Console.ReadLine()!;
 
-            if (int.TryParse(reponse, out choix) && choix >= 1 && choix <= 6)
-            {
-                choixValide = true;
-            }
-            else 
-            { 
-                Console.WriteLine("Choix invalide, recommencez.");
-                choixValide = false;
-            }
-
-        } while (!choixValide);
-
-        if (choix == 1) // Arroser
-        {
-            bool idxValide = true;
-            int index;
-            bool qteValide = true;
-            double quantité;
-
-            Console.Write("Numéro du terrain à arroser : ");
             do
             {
-                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
+                string reponse = Console.ReadLine()!;
+
+                if (int.TryParse(reponse, out choix) && choix >= 1 && choix <= 6)
                 {
-                    idxValide = true;
+                    choixValide = true;
                 }
-                else
-                {
-                    idxValide = false;
-                    Console.Write("Index invalide, entrez un nouveau numéro : ");
+                else 
+                { 
+                    Console.WriteLine("Choix invalide, recommencez.");
+                    choixValide = false;
                 }
 
-            } while (!idxValide);
+            } while (!choixValide);
 
-            Console.Write("Quantité d’eau à verser (entre 1 et 100): "); // Limite d'eau dispo par tour à gerer /!\
-            do
+            if (choix == 1) // Arroser une plante
             {
-                if (double.TryParse(Console.ReadLine()!, out quantité) && quantité >= 1 && quantité <= 100)
-                {
-                    qteValide = true;
-                }
-                else
-                {
-                    qteValide = false;
-                    Console.Write("Quantité invalide, entrez en une nouvelle : ");
-                }
+                bool idxValide = true;
+                bool coordXValide = true;
+                bool coordYValide = true;
+                int index;
+                int coordX;
+                int coordY;
+                bool qteValide = true;
+                double quantité;
+                comptActions++;
 
-            } while (!qteValide);
-
-            PotagerSimu.Arroser(index, quantité);   //On arrose le terrain
-        }
-
-        if (choix == 2) //Planter
-        {
-            bool idxValide = true;
-            int index;
-            int ligne;
-            int col;
-            bool nomPlanteValide = true;
-            bool saisonSemiValide = true;
-            string nomPlante;
-            Plantes planteASemer = null;
-
-            //Demander la plante à semer
-            Console.Write("Type de plante à semer (Pomme, Fraise) : ");
-            do 
-            {
+                Console.Write("Numéro du terrain contenant la plante : ");
                 do
                 {
-                    nomPlante = Console.ReadLine()!.ToLower();
-                    if (ListePlantes.Contains(nomPlante)) //On vérifie que le semi existe
+                    if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
                     {
-                        nomPlanteValide = true;
+                        idxValide = true;
                     }
                     else
                     {
-                        nomPlanteValide = false;
-                        Console.Write("Plante inexistante, entrez en une autre : ");
+                        idxValide = false;
+                        Console.Write("Index invalide, entrez un nouveau numéro : ");
                     }
 
-                } while (!nomPlanteValide);
+                } while (!idxValide);
 
-                Plantes plante = nomPlante switch
+                Console.Write("Quantité d’eau à verser (entre 1 et 100): "); // Limite d'eau dispo par tour à gerer /!\
+                do
                 {
-                    "pomme"          => new Pomme(),
-                    "fraise"         => new Fraise(),
-                };
+                    if (double.TryParse(Console.ReadLine()!, out quantité) && quantité >= 1 && quantité <= 100)
+                    {
+                        qteValide = true;
+                    }
+                    else
+                    {
+                        qteValide = false;
+                        Console.Write("Quantité invalide, entrez en une nouvelle : ");
+                    }
 
-                // Vérif de la saison de semis de la plante -> si aucune plante à planter dans cette saison (à gérer!)
-                if (!plante.SaisonsSemi.Contains(saisonActuelle))
+                } while (!qteValide);
+
+                do
                 {
-                    Console.WriteLine($"{plante.Nom} ne peut être semé en {saisonActuelle}.");
-                    saisonSemiValide = false;
-                    Console.Write("Veuillez choisir une autre plante : "); //Retour menu d'actions à gérer !
-                    //if (Console.ReadLine()!.ToLower() == "retour")    //retour menu d'action
-                        
-                }
-                else
-                {
-                    saisonSemiValide = true;
-                    planteASemer = plante;
-                }
+                    Console.Write("Coordonnée X de la plante à arroser : ");
+                    do
+                    {
+                        if (int.TryParse(Console.ReadLine()!, out coordX) && coordX >= 0 && coordX < PotagerSimu.ListeTerrains[index].Lignes)
+                        {
+                            coordXValide = true;
+                        }
+                        else
+                        {
+                            coordXValide = false;
+                            Console.Write("Coordonnée invalide, entrez un nouveau numéro : ");
+                        }
 
-            } while (!saisonSemiValide);
+                    } while (!coordXValide);
 
-            //Demander le terrain sur lequel semer
-            Console.Write("Numéro du terrain sur lequel planter : ");
-            do
+                    Console.Write("Coordonnée Y de la plante à arroser : ");
+                    do
+                    {
+                        if (int.TryParse(Console.ReadLine()!, out coordY) && coordY >= 0 && coordY < PotagerSimu.ListeTerrains[index].Colonnes)
+                        {
+                            coordYValide = true;
+                        }
+                        else
+                        {
+                            coordYValide = false;
+                            Console.Write("Coordonnée invalide, entrez un nouveau numéro : ");
+                        }
+
+                    } while (!coordYValide);
+
+                } while(!PotagerSimu.Arroser(index, coordX, coordY, quantité)); //tant que la plante n'a pas été trouvée
+
+            }
+
+            if (choix == 2) //Planter
             {
-                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
+                bool idxValide = true;
+                int index;
+                int ligne;
+                int col;
+                bool nomPlanteValide = true;
+                bool saisonSemiValide = true;
+                string nomPlante;
+                Plantes planteASemer = null;
+                comptActions++;
+
+                //Demander la plante à semer
+                Console.Write("Type de plante à semer (Pomme, Fraise) : ");
+                do 
                 {
-                    idxValide = true;
-                }
-                else
+                    do
+                    {
+                        nomPlante = Console.ReadLine()!.ToLower();
+                        if (ListePlantes.Contains(nomPlante)) //On vérifie que le semi existe
+                        {
+                            nomPlanteValide = true;
+                        }
+                        else
+                        {
+                            nomPlanteValide = false;
+                            Console.Write("Plante inexistante, entrez en une autre : ");
+                        }
+
+                    } while (!nomPlanteValide);
+
+                    Plantes plante = nomPlante switch
+                    {
+                        "pomme"          => new Pomme(),
+                        "fraise"         => new Fraise(),
+                    };
+
+                    // Vérif de la saison de semis de la plante -> si aucune plante à planter dans cette saison (à gérer!)
+                    if (!plante.SaisonsSemi.Contains(saisonActuelle))
+                    {
+                        Console.WriteLine($"{plante.Nom} ne peut être semé en {saisonActuelle}.");
+                        saisonSemiValide = false;
+                        Console.Write("Veuillez choisir une autre plante : "); //Retour menu d'actions à gérer !
+                        //if (Console.ReadLine()!.ToLower() == "retour")    //retour menu d'action
+                            
+                    }
+                    else
+                    {
+                        saisonSemiValide = true;
+                        planteASemer = plante;
+                    }
+
+                } while (!saisonSemiValide);
+
+                //Demander le terrain sur lequel semer
+                Console.Write("Numéro du terrain sur lequel planter : ");
+                do
                 {
-                    idxValide = false;
-                    Console.Write("Index invalide, entrez un nouveau numéro : ");
-                }
+                    if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
+                    {
+                        idxValide = true;
+                    }
+                    else
+                    {
+                        idxValide = false;
+                        Console.Write("Index invalide, entrez un nouveau numéro : ");
+                    }
 
-            } while (!idxValide);
+                } while (!idxValide);
 
-            Terrains terrain = PotagerSimu.ListeTerrains[index];   // On recupère le terrain choisi
+                Terrains terrain = PotagerSimu.ListeTerrains[index];   // On recupère le terrain choisi
 
-            //Demander l'emplacement
-            do 
+                //Demander l'emplacement
+                do 
+                {
+                    Console.Write("Ligne du terrain : ");
+                    ligne = int.Parse(Console.ReadLine()!);
+                    /*if (int.TryParse(Console.ReadLine()!, out ligne)){}*/
+
+                    Console.Write("Colonne du terrain : ");
+                    col = int.Parse(Console.ReadLine()!);
+
+                } while(terrain.Planter(planteASemer, ligne, col) == false); // Tant que l'emplacement est mauvais, redemander les coordonnées
+            
+            }
+
+            if (choix == 3) //Ajouter un terrain au potager
             {
-                Console.Write("Ligne du terrain : ");
+                bool typeValide = true;
+                string nomType;
+                int ligne;
+                int col;
+                comptActions++;
+
+                // Demander le type de terrain
+                Console.Write("Type du terrain à ajouer (sable, argile, terre) : ");
+                do
+                {
+                    nomType = Console.ReadLine()!;
+                    nomType.ToLower();
+                    if (ListeTerrains.Contains(nomType)) //On vérifie que le semi existe
+                    {
+                        typeValide = true;
+                    }
+                    else
+                    {
+                        typeValide = false;
+                        Console.Write("Type inexistant, entrez en un autre : ");
+                    }
+
+                } while (!typeValide);
+
+                //Demander la dimension du terrain
+                Console.Write("Nombre de lignes du terrain : ");    // Mettre une limite !
                 ligne = int.Parse(Console.ReadLine()!);
-                /*if (int.TryParse(Console.ReadLine()!, out ligne)){}*/
 
-                Console.Write("Colonne du terrain : ");
+                Console.Write("Nombre de colonnes du terrain : ");
                 col = int.Parse(Console.ReadLine()!);
 
-            } while(terrain.Planter(planteASemer, ligne, col) == false); // Tant que l'emplacement est mauvais, redemander les coordonnées
-        
-        }
-
-        if (choix == 3) //Ajouter un terrain au potager
-        {
-            bool typeValide = true;
-            string nomType;
-            int ligne;
-            int col;
-
-            // Demander le type de terrain
-            Console.Write("Type du terrain à ajouer (sable, argile, terre) : ");
-            do
-            {
-                nomType = Console.ReadLine()!;
-                nomType.ToLower();
-                if (ListeTerrains.Contains(nomType)) //On vérifie que le semi existe
+                Terrains terrain = nomType switch
                 {
-                    typeValide = true;
-                }
-                else
-                {
-                    typeValide = false;
-                    Console.Write("Type inexistant, entrez en un autre : ");
-                }
+                    "sable"          => new Sable(ligne,col),
+                    "terre"         => new Terre(ligne,col),
+                    "argile"        => new Argile(ligne,col)
+                };
 
-            } while (!typeValide);
+                PotagerSimu.ListeTerrains.Add(terrain); // Terrain ajouté
+            }
 
-            //Demander la dimension du terrain
-            Console.Write("Nombre de lignes du terrain : ");    // Mettre une limite !
-            ligne = int.Parse(Console.ReadLine()!);
-
-            Console.Write("Nombre de colonnes du terrain : ");
-            col = int.Parse(Console.ReadLine()!);
-
-            Terrains terrain = nomType switch
+            if (choix == 4) //Recolter un fruit
             {
-                "sable"          => new Sable(ligne,col),
-                "terre"         => new Terre(ligne,col),
-                "argile"        => new Argile(ligne,col)
-            };
+                bool idxValide = true;
+                int index;
+                comptActions++;
+                
+                Console.Write("Numéro du terrain sur lequel vous voulez recolter des fruits : ");
+                do
+                {
+                    if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index <= PotagerSimu.ListeTerrains.Count)
+                    {
+                        idxValide = true;
+                    }
+                    else
+                    {
+                        idxValide = false;
+                        Console.Write("Index invalide, entrez un nouveau numéro : ");
+                    }
 
-            PotagerSimu.ListeTerrains.Add(terrain); // Terrain ajouté
-        }
+                } while (!idxValide);
 
-        if (choix == 4) //Traiter une maladie
-        {
+                Terrains terrain = PotagerSimu.ListeTerrains[index];   // On recupère le terrain choisi
+                PotagerSimu.Recolter(terrain); //On récolte
 
-        }
+            }
 
-        if (choix == 5) //Recolter un fruit
-        {
+            if (choix == 5) //Continuer la simu
+            {
+                maxAtteint = true;
+                return;
+            }
 
-        }
+            if (comptActions >= nbActionsMax) 
+                maxAtteint = true;    //vérification nb actions
+            else
+            {
+                Console.WriteLine($"Il vous reste {nbActionsMax-comptActions} actions à utiliser.");
+                Console.WriteLine($"Tapez 1, 2, 3 ou 4 pour effectuer une action ; ou 5 pour continuer la simulation :");
+            } 
 
-        if (choix == 6) //Continuer la simu
-        {
-            return;
-        }
+        } while (!maxAtteint);
     
     }
+    
 
 
 }

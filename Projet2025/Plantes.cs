@@ -23,7 +23,7 @@ public abstract class Plantes
     public List<Saisons> SaisonsSemi {get; set;} 
     public TypeTerrain TerrainPref {get; set;}
     public int Espacement {get; set;} //en nombre de cases
-    public int Place {get; set;}    // pareil
+    public int Place {get; set;}  // pareil
     public double VitesseCroissance {get; set;}
     public int BesoinEau {get; set;} // echelle de 1 à 100
     public int BesoinLum {get; set;}

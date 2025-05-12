@@ -13,6 +13,7 @@ public class Meteo
         Random rnd = new Random();
         QuantEau = rnd.Next(10,101); // Quantité d'eau tombée sur le potager
         QuantLum = rnd.Next(0,15); // Quantité de lum reçue sur le potager
+        int comptIndex = 0;
 
         foreach (Terrains terrain in potager.ListeTerrains)
         {
@@ -28,14 +29,15 @@ public class Meteo
             if (terrain is Terre && terrain.NivEau > 60)
             {
                 VerDeTerre verDeTerre = new VerDeTerre();
-                potager.Apparait(verDeTerre, terrain);
+                potager.Apparait(verDeTerre, comptIndex);
             }
             if ((terrain is Terre || terrain is Sable) && terrain.NivEau > 90) // Le ver de terre apparait sur du sable ou de la terre très humide
             {
                 Escargot escargot = new Escargot();
-                potager.Apparait(escargot, terrain);
+                potager.Apparait(escargot, comptIndex);
             }
-
+            
+            comptIndex ++;  //index du terrain dans la liste
             terrain.NivEau = terrain.NivEau*0.5;    // On baisse le niveau d'eau après que les plantes ait bu
 
         }
@@ -45,6 +47,8 @@ public class Meteo
     {
         Random rnd = new Random();
         QuantLum  = rnd.Next(15,75);
+        int comptIndex = 0;
+
         foreach (Terrains terrain in potager.ListeTerrains) //parcourir la liste des terrains du potager 
         {
             terrain.NivEau -= 0.5*QuantLum; // le niveau d'eau du terrain diminue avec l'intensité de la lumière (évaporation)
@@ -59,15 +63,17 @@ public class Meteo
             if (QuantLum > 30)
             {
                 Abeille abeille = new Abeille();
-                potager.Apparait(abeille, terrain); // une abeille apparait peu importe le terrain 
+                potager.Apparait(abeille, comptIndex); // une abeille apparait peu importe le terrain 
             }
                 
             if (terrain is Sable && terrain.NivEau < 15) // si le terrain est du sable et qu'il est très sec
             {
                 Criquet criquet = new Criquet();
-                potager.Apparait(criquet, terrain); // Alors un criquet apparait
+                potager.Apparait(criquet, comptIndex); // Alors un criquet apparait
             }     
         }
+
+        comptIndex++;
         
     }
 
