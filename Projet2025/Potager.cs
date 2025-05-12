@@ -2,7 +2,7 @@ public class Potager
 {
     //public string Nom { get; }
     public List<Terrains> ListeTerrains { get; }
-
+    public bool urgenceActive = false;
 
     public double ReserveFraise {get; set;} // Nombre de fruits dans la reserve
     public double ReservePomme {get; set;}
@@ -77,65 +77,54 @@ public class Potager
         }
     }
 
-    
-    public void Apparait(Animaux animal, Terrains terrain) // Un animal apparait sur un terrain du potager
+    public void ApparaitAnimaux(Animaux animal,Terrains terrain)
     {
-        //terrain.ListeAnimaux.Add(animal); // Ajoute l'animal dans la list<Animaux> présents sur le terrain
-        
         Random rnd = new Random();
-        int posx  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de l'animal choisi aléatoirement
-        int posy = rnd.Next(0, terrain.Colonnes);
-        animal.posX = posx; //On ajoute les coordonnées en attributs de la classe Animal
-        animal.posY = posy;
-        
-        Console.WriteLine($"Un {animal.NomA} est apparut sur votre Terrain");
-        Console.WriteLine($"Il est sur cette position : Ligne = {posx}, Colonne = {posy}");   
+        animal.posX  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de l'obstacle
+        animal.posY = rnd.Next(0, terrain.Colonnes);
 
-        if(terrain.grille[posx,posy] != null && animal is AnimauxNuisible)
+        Console.WriteLine($"Un {animal.NomA} est apparut sur votre Terrain");
+        Console.WriteLine($"Il est sur cette position : Ligne = {animal.posX}, Colonne = {animal.posY}"); 
+
+    }
+    public void Impacter(Animaux animal, Terrains terrain) // Un animal apparait sur un terrain du potager
+    {
+        //terrain.ListeAnimaux.Add(animal); // Ajoute l'animal dans la list<Animaux> présents sur le terrain     
+
+        if(terrain.grille[animal.posX, animal.posY] != null && animal is AnimauxNuisible)
         {
             Console.WriteLine("Votre plante est en danger !");
-
             animal.Nuire(terrain);
+            urgenceActive = true;
         }
 
-        if(terrain.grille[posx,posy] != null && animal is AnimauxUtiles)
+        if(terrain.grille[animal.posX,animal.posY] != null && animal is AnimauxUtiles)
         {
             Console.WriteLine("Votre plante n'est pas en danger");
-
             animal.Aider(terrain);
         }
     }
 
-    public void Contaminer(Maladies maladie, Terrains terrain)
+    public void ApparaitMaladies(Maladies maladie, Terrains terrain)
     {
         Random rnd = new Random();
-        int posx  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de la maladie
-        int posy = rnd.Next(0, terrain.Colonnes);
-        Console.WriteLine($"Une maladie est apparue sur cette position : Ligne={posx}, Colonne={posy}");   
-        
-        int cont = rnd.Next(0, 101);
-        
+        maladie.posX  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de la maladie
+        maladie.posX = rnd.Next(0, terrain.Colonnes);
+        Console.WriteLine($"Une maladie est apparue sur cette position : Ligne={maladie.posX}, Colonne={maladie.posX}");
+    }
+    public void Contaminer(Maladies maladie, Terrains terrain)
+    {         
         foreach (Plantes p in terrain.ListePlantes)
-        {
-            if(cont <= maladie.ProbabiliteContamination)
-            {
-                if(Math.Abs(p.coordX - posx) <= 1 && Math.Abs(p.coordY - posy) <= 1)
-                {
-                    if(maladie is Anthracnose anthracnose)
-                        anthracnose.Pourrir(p);
-                    if(maladie is Pythium pythium)
-                        pythium.Affaiblir(p);
-                }
-            }
-
-            else if(p.coordX == posx && p.coordY == posy)
+        {         
+            if(p.coordX == maladie.posX && p.coordY == maladie.posY)
             {
                 if(maladie is Anthracnose anthracnose)
                     anthracnose.Pourrir(p);
                 if(maladie is Pythium pythium)
                         pythium.Affaiblir(p);
             }
-        }           
+        }    
+        urgenceActive = true;       
     }
     /*
     // Test simule le passage d'un tour (ex : une semaine)

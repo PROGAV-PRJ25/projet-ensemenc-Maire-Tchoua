@@ -2,7 +2,7 @@ using System.Security.Cryptography.X509Certificates;
 
 public class Simulation {
 
-    private bool urgenceActive = false;
+    
     private Random rnd = new Random(); //Pas besoin pour l'instant
     public Plantes.Saisons saisonActuelle;
     public double tempActuelle;
@@ -62,10 +62,26 @@ public class Simulation {
     {
         saisonActuelle = ObtenirSaison(DateCourante);
         ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
-        Console.WriteLine($"\n Semaine du {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
+        Console.WriteLine($"\n Jour {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
+
+        Random rnd = new Random();
+        int cont = rnd.Next(0, 101);
 
         // Avancer de jour en jour
+        foreach (Terrains t in PotagerSimu.ListeTerrains)
+        {
+            // Evolution des maladies
+            foreach (Maladies m in t.ListeMaladie)
+            {
+                if(cont <= m.ProbabiliteContamination)
+                {
+                    m.Propager();
+                }
+                PotagerSimu.Contaminer(m,t);
+            }
 
+            // Evolution des animaux
+        }
 
     }
 
@@ -79,7 +95,7 @@ public class Simulation {
 
         do
         {
-            if (!urgenceActive)
+            if (!PotagerSimu.urgenceActive)
             {
                 Console.WriteLine("Continuer la simulation ?");
                 reponse = Console.ReadLine()!;

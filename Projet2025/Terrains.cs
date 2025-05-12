@@ -10,6 +10,7 @@ public abstract class Terrains {
     public Plantes.TypeTerrain Type { get; protected set; } // Type de terrain 
     public List<Plantes> ListePlantes {get; set;} // Liste des plantes plantées dans le terrain
     public List<Animaux> ListeAnimaux {get; set;} // Liste des animaux actuellement sur le terrain
+    public List<Maladies> ListeMaladie {get; set;}
 
 
     public Plantes[,] grille;   //Matrice des plantes pour gérer positions et espacement
