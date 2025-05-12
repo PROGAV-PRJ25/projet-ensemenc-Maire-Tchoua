@@ -1,7 +1,7 @@
 public class Escargot : AnimauxNuisible
 {
 
-    public Escargot() : base(nomA : "Escargot", degat : 0.5)
+    public Escargot() : base(nomA : "Escargot", degat : 2)
     {}
 
     public override void Nuire(Terrains terrain) // L'escargot réduit la taille de la plante
@@ -12,8 +12,8 @@ public class Escargot : AnimauxNuisible
             {
                 if (!p.estMature)
                 {
-                    p.croissanceActuelle -= Degat;
-                    Console.WriteLine("Votre plante grandit moins vite");
+                    p.croissanceActuelle /= Degat;
+                    Console.WriteLine("La taille de votre plante est réduite");
                 }
             }
         }

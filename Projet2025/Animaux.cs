@@ -13,6 +13,18 @@ public abstract class Animaux
         //Habitat = habitat;
     }
 
+    public void Deplacer(Animaux animal)
+    {
+        Random rnd = new Random();
+        int x  = rnd.Next(0, 1); // Coordonnées x,y de l'animal
+        int y = rnd.Next(0, 1);
+        
+        animal.posX += x;
+        animal.posY += y;
+        
+        Console.WriteLine($"L'animal est sur cette position : Ligne={animal.posX}, Colonne={animal.posY}"); 
+    }
+
     public virtual void Nuire(Terrains terrain) {}
     public virtual void Aider(Terrains terrain) {}
 

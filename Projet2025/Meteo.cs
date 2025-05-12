@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 public class Meteo
 { 
     public int QuantEau {get;set;}
@@ -11,7 +13,7 @@ public class Meteo
     public void Pleuvoir(Potager potager) 
     {
         Random rnd = new Random();
-        QuantEau = rnd.Next(10,101); // Quantité d'eau tombée sur le potager
+        QuantEau = rnd.Next(50,200); // Quantité d'eau tombée sur le potager
         QuantLum = rnd.Next(0,15); // Quantité de lum reçue sur le potager
 
         foreach (Terrains terrain in potager.ListeTerrains)
@@ -38,6 +40,11 @@ public class Meteo
 
             terrain.NivEau = terrain.NivEau*0.5;    // On baisse le niveau d'eau après que les plantes ait bu
 
+            if(ContexteSimulation.TempEnCours < 5 && terrain.NivEau > 80) // S'il fait trop froid et humide cette maladie apparait 
+            {
+                Pythium pythium = new Pythium();
+                potager.Contaminer(pythium, terrain);
+            }
         }
     }
 
@@ -67,9 +74,17 @@ public class Meteo
                 Criquet criquet = new Criquet();
                 potager.Apparait(criquet, terrain); // Alors un criquet apparait
             }     
+                
+            
+
+            if(ContexteSimulation.TempEnCours > 30 && terrain.NivEau < 15)   // Si il fait trop chaud et sec cette maladie apparait 
+            {
+                Anthracnose anthracnose = new Anthracnose();
+                potager.Contaminer(anthracnose, terrain);
+            }
         }
-        
-    }
+    }    
+    
 
     public void Greler(Potager potager)
     {
@@ -80,8 +95,11 @@ public class Meteo
             foreach (Plantes p in terrain.ListePlantes)
             {
                 if (p.nbFruitsActuel >= 2)
-                    p.nbFruitsActuel -= 2; // Détruit des fruits
+                    p.nbFruitsActuel -= 2; // Détruit 2 fruits
+                else
+                    p.nbFruitsActuel = 0;
             } 
         }
+        
     }
 }

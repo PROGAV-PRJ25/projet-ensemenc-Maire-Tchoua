@@ -1,3 +1,5 @@
+using System.Security.Cryptography.X509Certificates;
+
 public class Simulation {
 
     private bool urgenceActive = false;
@@ -21,7 +23,7 @@ public class Simulation {
 
     private void ModeNormal() // Avance de semaine en semaine
     {
-        Console.Clear();
+        //Console.Clear();
         
         saisonActuelle = ObtenirSaison(DateCourante);
         ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
@@ -56,6 +58,17 @@ public class Simulation {
 
     }
 
+    public void ModeUrgence()
+    {
+        saisonActuelle = ObtenirSaison(DateCourante);
+        ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
+        Console.WriteLine($"\n Semaine du {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
+
+        // Avancer de jour en jour
+
+
+    }
+
     public void LancerSimulation() // Ou à faire direct dans le Program.cs
     {
         Console.WriteLine("La simulation va démarrée !");
@@ -69,7 +82,7 @@ public class Simulation {
             if (!urgenceActive)
             {
                 Console.WriteLine("Continuer la simulation ?");
-                reponse = Console.ReadLine();
+                reponse = Console.ReadLine()!;
                 if (reponse == "non" || reponse == "Non")
                 { 
                     continuer = false;
@@ -81,7 +94,12 @@ public class Simulation {
                     ModeNormal();   // Relance la simu d'une semaine
                 }
             }
-            // else ModeUrgence();
+            else 
+            {
+                // Continuer simulation ?
+                DateCourante = DateCourante.AddDays(1);
+                ModeUrgence();
+            }
 
         } while (continuer);
     }
@@ -346,8 +364,28 @@ public class Simulation {
 
         }
 
-        if (choix == 5) //Recolter un fruit
+        if (choix == 5) //Recolter des fruits sur un terrain
         {
+            bool idxValide = true;
+            int index;
+            
+            Console.Write("Numéro du terrain sur lequel vous voulez recolter des fruits : ");
+            do
+            {
+                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index <= PotagerSimu.ListeTerrains.Count)
+                {
+                    idxValide = true;
+                }
+                else
+                {
+                    idxValide = false;
+                    Console.Write("Index invalide, entrez un nouveau numéro : ");
+                }
+
+            } while (!idxValide);
+            Terrains terrain = PotagerSimu.ListeTerrains[index];   // On recupère le terrain choisi
+
+            PotagerSimu.Recolter(terrain);
 
         }
 
