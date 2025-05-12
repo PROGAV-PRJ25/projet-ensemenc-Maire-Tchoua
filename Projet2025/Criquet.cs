@@ -1,14 +1,22 @@
 public class Criquet : AnimauxNuisible
 {
-    public Criquet() : base(TypeTerrain.Sable, nomA : "Criquet", degat : 3)
+    public Criquet() : base(nomA : "Criquet", degat : 3)
     {}
 
-    public void Attaquer(Plantes plante) // Divise par 4 la vitesse de croissance de la plante
+    public override void Nuire(Terrains terrain) // Divise par 4 la vitesse de croissance de la plante
     {
-        if (plante.croissanceActuelle > 0.5 && !plante.estMature) // La plante n'est pas encore mature (0.5 < croissanceActuelle < 1)
-        {    
-            plante.VitesseCroissance /= Degat;
-            Console.WriteLine("La plante pousse moins vite");
-        }
+        foreach (Plantes p in terrain.ListePlantes)
+        {
+            if(Math.Abs(p.coordX - posX) <= 1 && Math.Abs(p.coordY - posY) <= 1)
+            {
+                if( p.croissanceActuelle > 0.5 && !p.estMature)
+                {    
+                    p.VitesseCroissance /= Degat;
+                    Console.WriteLine("La plante pousse moins vite");
+                }
+            }
+        }  
+
+        
     }
 }

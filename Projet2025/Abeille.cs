@@ -1,22 +1,32 @@
 public class Abeille : AnimauxUtiles
 {
-    public Abeille() : base (habitat : TypeTerrain.Terre, nomA : "Abeille", bienfait : 2)
+    public Abeille() : base (nomA : "Abeille", bienfait : 2)
     {
     
     }
 
-    public void Butiner(Plantes plantes)  // Ajoute 4 fruits sinon augmente la taille de la plante
+    public override void Aider(Terrains terrain)  // Ajoute 4 fruits sinon augmente la taille de la plante
     {
-        if(plantes.NbFruitsMax > plantes.nbFruitsActuel + Bienfait && plantes.nbFruitsActuel != 0) // si la plante à des fruits
+        foreach (Plantes p in terrain.ListePlantes)
         {
-            plantes.nbFruitsActuel += Bienfait;
-            Console.WriteLine("De nouveaux fruits ont poussé sur la plante ");
-        }
-        else if(plantes.estMature) // si la plante est mature 
-        {
-            plantes.croissanceActuelle *= 0.2;
-            Console.WriteLine("La plante a grandie");
-        }
+            if(Math.Abs(p.coordX - posX) <= 1 && Math.Abs(p.coordY - posY) <= 1) // L'abeille butines la plante p et les plantes adjacentes
+            {
+                if (p.nbFruitsActuel != 0)
+                {
+                    if (p.NbFruitsMax > p.nbFruitsActuel + Bienfait)
+                    {   
+                        p.nbFruitsActuel += Bienfait;
+                        Console.WriteLine("De nouveaux fruits ont poussé sur la plante ");
+                    }
+                }
+                else //si plante pas mature
+                {
+                    p.croissanceActuelle += Bienfait/10;    //croissance augmente de 0.4
+                    Console.WriteLine("La plante a grandie");
+                }
+            }
+        }  
+       
     } 
         
     

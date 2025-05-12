@@ -1,32 +1,33 @@
 public abstract class Animaux
 {
     
-    public enum TypeTerrain {Terre, Argile, Sable}
-    public TypeTerrain Habitat {get; set;}
+    //public enum TypeTerrain {Terre, Argile, Sable}
+    //public TypeTerrain Habitat {get; set;}
     public string NomA {get; set;}
+    public int posX; //Coordonnées de l'animal sur le terrain
+    public int posY;
 
-    public int coordX;
-    public int coordY;
-    
-
-    public Animaux(TypeTerrain habitat, string nomA)
+    public Animaux(string nomA)
     {
         NomA = nomA;
-        Habitat = habitat;
-         
+        //Habitat = habitat;
     }
 
     public void Deplacer(Animaux animal)
     {
         Random rnd = new Random();
-        int posx  = rnd.Next(0, 1); // Coordonnées x,y de l'animal
-        int posy = rnd.Next(0, 1);
+        int x  = rnd.Next(0, 1); // Coordonnées x,y de l'animal
+        int y = rnd.Next(0, 1);
         
-        animal.coordX += posx;
-        animal.coordY += posy;
+        animal.posX += x;
+        animal.posY += y;
         
-        Console.WriteLine($"L'animal est sur cette position : Ligne={animal.coordX}, Colonne={animal.coordY}"); 
+        Console.WriteLine($"L'animal est sur cette position : Ligne={animal.posX}, Colonne={animal.posY}"); 
     }
+
+    public virtual void Nuire(Terrains terrain) {}
+    public virtual void Aider(Terrains terrain) {}
+
 
     public virtual string GetSymboleConsole() // Pas utilisé, permet d'avoir le symbole de l'animal
     {

@@ -30,12 +30,12 @@ public class Meteo
             if (terrain is Terre && terrain.NivEau > 60)
             {
                 VerDeTerre verDeTerre = new VerDeTerre();
-                terrain.Apparait(verDeTerre);
+                potager.Apparait(verDeTerre, terrain);
             }
             if ((terrain is Terre || terrain is Sable) && terrain.NivEau > 90) // Le ver de terre apparait sur du sable ou de la terre très humide
             {
                 Escargot escargot = new Escargot();
-                terrain.Apparait(escargot);
+                potager.Apparait(escargot, terrain);
             }
 
             terrain.NivEau = terrain.NivEau*0.5;    // On baisse le niveau d'eau après que les plantes ait bu
@@ -43,7 +43,7 @@ public class Meteo
             if(ContexteSimulation.TempEnCours < 5 && terrain.NivEau > 80) // S'il fait trop froid et humide cette maladie apparait 
             {
                 Pythium pythium = new Pythium();
-                terrain.Contaminer(pythium);
+                potager.Contaminer(pythium, terrain);
             }
         }
     }
@@ -66,23 +66,25 @@ public class Meteo
             if (QuantLum > 30)
             {
                 Abeille abeille = new Abeille();
-                terrain.Apparait(abeille); // une abeille apparait peu importe le terrain 
+                potager.Apparait(abeille, terrain); // une abeille apparait peu importe le terrain 
             }
                 
             if (terrain is Sable && terrain.NivEau < 15) // si le terrain est du sable et qu'il est très sec
             {
                 Criquet criquet = new Criquet();
-                terrain.Apparait(criquet); // Alors un criquet apparait
-            }  
+                potager.Apparait(criquet, terrain); // Alors un criquet apparait
+            }     
+                
+            
 
             if(ContexteSimulation.TempEnCours > 30 && terrain.NivEau < 15)   // Si il fait trop chaud et sec cette maladie apparait 
             {
                 Anthracnose anthracnose = new Anthracnose();
-                terrain.Contaminer(anthracnose);
+                potager.Contaminer(anthracnose, terrain);
             }
         }
-        
-    }
+    }    
+    
 
     public void Greler(Potager potager)
     {

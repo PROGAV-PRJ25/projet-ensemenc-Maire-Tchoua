@@ -9,8 +9,7 @@ public abstract class Terrains {
     public int Capacite {get;} // Nombre de plantes max (nb de cases)
     public Plantes.TypeTerrain Type { get; protected set; } // Type de terrain 
     public List<Plantes> ListePlantes {get; set;} // Liste des plantes plantées dans le terrain
-    
-    //public List<Animaux> ListeAnimaux {get; set;} // Liste des animaux actuellement sur le terrain
+    public List<Animaux> ListeAnimaux {get; set;} // Liste des animaux actuellement sur le terrain
 
 
     public Plantes[,] grille;   //Matrice des plantes pour gérer positions et espacement
@@ -106,87 +105,6 @@ public abstract class Terrains {
         return true;
     }
 
-    public void Apparait(Animaux animal) // Un animal apparait sur le terrain
-    {
-        //Ajouter l'animal dans la list<Animaux> présents sur le terrain
-        Random rnd = new Random();
-        animal.coordX  = rnd.Next(0, Lignes); // Coordonnées x,y de l'animal
-        animal.coordY = rnd.Next(0, Colonnes);
-        Console.WriteLine($"Un {animal.NomA} est apparut sur votre Terrain");
-        Console.WriteLine($"Il est sur cette position : Ligne={animal.coordX}, Colonne={animal.coordY}");   
-
-        if(grille[animal.coordX,animal.coordY] != null && animal is AnimauxNuisible)
-        {
-            Console.WriteLine("Votre plante est en danger !");
-             
-            foreach (Plantes p in ListePlantes) // Cherche la plante qui est sur la même position que l'animal
-            {
-                if(p.coordX == animal.coordX && p.coordY == animal.coordY)
-                {
-                    //Escargot escargot = (Escargot) animal; // Récupère l'information que l'animal est de classe escargot pour appeler la méthode
-                    if(animal is Escargot escargot) // si l'animal de la classe est un escargot
-                        escargot.Grignotter(p); // la plante est grignottée par l'escargot
-
-                    if (animal is Oiseaux oiseaux) 
-                            oiseaux.Picorer(p);
-                }
-                if(Math.Abs(p.coordX - animal.coordX) <= 1 && Math.Abs(p.coordY - animal.coordY) <= 1)
-                {
-                    if (animal is Criquet criquet) 
-                        criquet.Attaquer(p);
-                }
-            }                   
-        }
-
-        if(grille[animal.coordX,animal.coordY] != null && animal is AnimauxUtiles)
-        {
-            Console.WriteLine("Votre plante n'est pas en danger");
-            
-            foreach (Plantes p in ListePlantes)
-            {
-                if(Math.Abs(p.coordX - animal.coordX) <= 1 && Math.Abs(p.coordY - animal.coordY) <= 1)
-                {
-                    if(animal is Abeille abeille) 
-                        abeille.Butiner(p); // L'abeille butines la plante p et les plantes adjacentes
-                    if(animal is VerDeTerre verDeTerre)
-                        verDeTerre.Remuer(p); 
-                }
-            }  
-        }
-    }
-
-
-    public void Contaminer(Maladies maladie)
-    {
-        Random rnd = new Random();
-        int posx  = rnd.Next(0, 101); // Coordonnées x,y de la maladie
-        int posy = rnd.Next(0, 101);
-        Console.WriteLine($"Une maladie est apparue sur cette position : Ligne={posx}, Colonne={posy}");   
-        
-        int cont = rnd.Next(0, 101);
-        
-        foreach (Plantes p in ListePlantes)
-        {
-            if(cont <= maladie.ProbabiliteContamination)
-            {
-                if(Math.Abs(p.coordX - posx) <= 1 && Math.Abs(p.coordY - posy) <= 1)
-                {
-                    if(maladie is Anthracnose anthracnose)
-                        anthracnose.Pourrir(p);
-                    if(maladie is Pythium pythium)
-                        pythium.Affaiblir(p);
-                }
-            }
-
-            else if(p.coordX == posx && p.coordY == posy)
-            {
-                if(maladie is Anthracnose anthracnose)
-                    anthracnose.Pourrir(p);
-                if(maladie is Pythium pythium)
-                        pythium.Affaiblir(p);
-            }
-        }           
-    }
     public void VerifierEtatPlantes() // A lancer après Pousser, pour vérifier si plante morte
     {
         foreach (Plantes p in ListePlantes)
