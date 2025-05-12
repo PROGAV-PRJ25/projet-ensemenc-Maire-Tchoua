@@ -159,8 +159,8 @@ public abstract class Terrains {
     public void Contaminer(Maladies maladie)
     {
         Random rnd = new Random();
-        int posx  = rnd.Next(0, Lignes); // Coordonnées x,y de la maladie
-        int posy = rnd.Next(0, Colonnes);
+        int posx  = rnd.Next(0, 101); // Coordonnées x,y de la maladie
+        int posy = rnd.Next(0, 101);
         Console.WriteLine($"Une maladie est apparue sur cette position : Ligne={posx}, Colonne={posy}");   
         
         int cont = rnd.Next(0, 101);
@@ -182,6 +182,8 @@ public abstract class Terrains {
             {
                 if(maladie is Anthracnose anthracnose)
                     anthracnose.Pourrir(p);
+                if(maladie is Pythium pythium)
+                        pythium.Affaiblir(p);
             }
         }           
     }

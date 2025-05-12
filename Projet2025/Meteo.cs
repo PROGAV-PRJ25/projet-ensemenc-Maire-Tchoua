@@ -40,7 +40,7 @@ public class Meteo
 
             terrain.NivEau = terrain.NivEau*0.5;    // On baisse le niveau d'eau après que les plantes ait bu
 
-            if(ContexteSimulation.TempEnCours < 10 && terrain.NivEau > 80) // S'il fait trop froid et humide cette maladie apparait 
+            if(ContexteSimulation.TempEnCours < 5 && terrain.NivEau > 80) // S'il fait trop froid et humide cette maladie apparait 
             {
                 Pythium pythium = new Pythium();
                 terrain.Contaminer(pythium);
@@ -75,7 +75,7 @@ public class Meteo
                 terrain.Apparait(criquet); // Alors un criquet apparait
             }  
 
-            if(ContexteSimulation.TempEnCours > 30 && terrain.NivEau < 20)   // Si il fait trop chaud et sec cette maladie apparait 
+            if(ContexteSimulation.TempEnCours > 30 && terrain.NivEau < 15)   // Si il fait trop chaud et sec cette maladie apparait 
             {
                 Anthracnose anthracnose = new Anthracnose();
                 terrain.Contaminer(anthracnose);

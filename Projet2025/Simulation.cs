@@ -23,7 +23,7 @@ public class Simulation {
 
     private void ModeNormal() // Avance de semaine en semaine
     {
-        Console.Clear();
+        //Console.Clear();
         
         saisonActuelle = ObtenirSaison(DateCourante);
         ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
@@ -58,6 +58,17 @@ public class Simulation {
 
     }
 
+    public void ModeUrgence()
+    {
+        saisonActuelle = ObtenirSaison(DateCourante);
+        ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
+        Console.WriteLine($"\n Semaine du {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
+
+        // Avancer de jour en jour
+
+
+    }
+
     public void LancerSimulation() // Ou à faire direct dans le Program.cs
     {
         Console.WriteLine("La simulation va démarrée !");
@@ -83,7 +94,12 @@ public class Simulation {
                     ModeNormal();   // Relance la simu d'une semaine
                 }
             }
-            // else ModeUrgence();
+            else 
+            {
+                // Continuer simulation ?
+                DateCourante = DateCourante.AddDays(1);
+                ModeUrgence();
+            }
 
         } while (continuer);
     }
