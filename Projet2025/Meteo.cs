@@ -18,6 +18,7 @@ public class Meteo
 
         foreach (Terrains terrain in potager.ListeTerrains)
         {
+            // Evolution de l'état du terrain 
             terrain.NivEau +=  QuantEau - QuantEau*terrain.Absorption; // Le niveau d'eau danns le terrain augmente selon la quantité d'eau qu'il a absorbé
             foreach (Plantes p in terrain.ListePlantes)
             {
@@ -26,7 +27,9 @@ public class Meteo
             }
             
             ContexteSimulation.TempEnCours -= 3; // On pert 3 degrés quand il pleut
+            terrain.NivEau = terrain.NivEau*0.5;    // On baisse le niveau d'eau après que les plantes ait bu
 
+            // Obstacles 
             if (terrain is Terre && terrain.NivEau > 60)
             {
                 VerDeTerre verDeTerre = new VerDeTerre();
@@ -37,10 +40,9 @@ public class Meteo
             {
                 Escargot escargot = new Escargot();
                 potager.ApparaitAnimaux(escargot, terrain);
+                terrain.ListeAnimauxNuisibles.Add(escargot); // Ajoute l'escargot dans la liste des animaux nuisibles sur le terrain 
                 potager.Impacter(escargot, terrain);
             }
-
-            terrain.NivEau = terrain.NivEau*0.5;    // On baisse le niveau d'eau après que les plantes ait bu
 
             if(ContexteSimulation.TempEnCours < 5 && terrain.NivEau > 80) // S'il fait trop froid et humide cette maladie apparait 
             {
@@ -55,6 +57,7 @@ public class Meteo
     {
         Random rnd = new Random();
         QuantLum  = rnd.Next(15,75);
+
         foreach (Terrains terrain in potager.ListeTerrains) //parcourir la liste des terrains du potager 
         {
             terrain.NivEau -= 0.5*QuantLum; // le niveau d'eau du terrain diminue avec l'intensité de la lumière (évaporation)
@@ -66,6 +69,8 @@ public class Meteo
 
             ContexteSimulation.TempEnCours += 3; // On gagne 3 degrés avec le soleil
 
+
+            // Obstacles 
             if (QuantLum > 30)
             {
                 Abeille abeille = new Abeille();
@@ -77,10 +82,17 @@ public class Meteo
             {
                 Criquet criquet = new Criquet();
                 potager.ApparaitAnimaux(criquet, terrain);
+                terrain.ListeAnimauxNuisibles.Add(criquet);
                 potager.Impacter(criquet, terrain); // Alors un criquet apparait
-            }     
-                
-            
+            }  
+
+            if(ContexteSimulation.SaisonEnCours is Plantes.Saisons.Printemps && ContexteSimulation.TempEnCours > 15)   // Au printemps les oiseaux apparaissent 
+            {
+                Oiseaux oiseaux = new Oiseaux();
+                potager.ApparaitAnimaux(oiseaux, terrain);
+                terrain.ListeAnimauxNuisibles.Add(oiseaux);
+                potager.Impacter(oiseaux,terrain);
+            }
 
             if(ContexteSimulation.TempEnCours > 30 && terrain.NivEau < 15)   // Si il fait trop chaud et sec cette maladie apparait 
             {

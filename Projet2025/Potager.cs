@@ -89,14 +89,17 @@ public class Potager
     }
     public void Impacter(Animaux animal, Terrains terrain) // Un animal apparait sur un terrain du potager
     {
-        //terrain.ListeAnimaux.Add(animal); // Ajoute l'animal dans la list<Animaux> présents sur le terrain     
-
-        if(terrain.grille[animal.posX, animal.posY] != null && animal is AnimauxNuisible)
+       
+        if(animal is AnimauxNuisible)
         {
-            Console.WriteLine("Votre plante est en danger !");
-            animal.Nuire(terrain);
-            urgenceActive = true;
+            if(terrain.grille[animal.posX, animal.posY] != null)
+            {
+                Console.WriteLine("Votre plante est en danger !");
+                animal.Nuire(terrain);
+            }
+            urgenceActive = true; // Déclanche le mode Urgence même si l'animal n'est pas sur une plante 
         }
+       
 
         if(terrain.grille[animal.posX,animal.posY] != null && animal is AnimauxUtiles)
         {
@@ -118,14 +121,16 @@ public class Potager
         {         
             if(p.coordX == maladie.posX && p.coordY == maladie.posY)
             {
+                p.estMalade = true;
                 if(maladie is Anthracnose anthracnose)
                     anthracnose.Pourrir(p);
                 if(maladie is Pythium pythium)
-                        pythium.Affaiblir(p);
+                    pythium.Affaiblir(p);
             }
         }    
-        urgenceActive = true;       
+        urgenceActive = true;  // Déclanche le mode urgence  
     }
+
     /*
     // Test simule le passage d'un tour (ex : une semaine)
     public void PasserUnTour()
@@ -170,6 +175,37 @@ public class Potager
 
         ReserveFraise += nbrFraiseRecolte;
         ReservePomme += nbrPommeRecolte;  
+    }
+
+
+    public void Chasser(AnimauxNuisible animal, Terrains terrain)
+    {
+        terrain.ListeAnimauxNuisibles.Remove(animal);     // Supprime l'animal de la liste 
+        Console.WriteLine($"Vous avez chasser {animal} de votre terrain");  
+        if(terrain.ListeAnimauxNuisibles == null)     
+            urgenceActive = false; 
+    }
+
+    public void Traiter(Maladies maladie, Terrains terrain)
+    {
+        // La maladie est progressivement éradiquée 
+        foreach (Plantes p in terrain.ListePlantes)
+        {
+            if(p.estMalade)
+            {
+                if(maladie is Anthracnose)
+                {
+                    p.nbFruitsActuel += 0.2;
+                }
+                if(maladie is Pythium)
+                {
+                    p.VitesseCroissance += 0.1;
+                }
+            }
+        }
+        
+        if(terrain.ListeMaladie == null)
+            urgenceActive = false;
     }
 
 

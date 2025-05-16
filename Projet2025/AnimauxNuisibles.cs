@@ -8,15 +8,15 @@ public abstract class AnimauxNuisible : Animaux
 
     public override abstract void Nuire(Terrains terrain);
 
-    public void Deplacer(AnimauxNuisible animal)
+    public void Deplacer()
     {
         Random rnd = new Random();
         int x  = rnd.Next(0, 1); // Coordonnées x,y de l'animal
         int y = rnd.Next(0, 1);
         
-        animal.posX += x;
-        animal.posY += y;
+        posX += x;
+        posY += y;
         
-        Console.WriteLine($"L'animal est sur cette position : Ligne={animal.posX}, Colonne={animal.posY}"); 
+        Console.WriteLine($"L'animal s'est déplacé sur cette position : Ligne={posX}, Colonne={posY}"); 
     }
 }

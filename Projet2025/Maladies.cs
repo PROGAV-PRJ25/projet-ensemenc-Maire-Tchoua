@@ -21,7 +21,7 @@ public abstract class Maladies {
         posX += x;
         posY += y;
         
-        Console.WriteLine($"L'animal est sur cette position : Ligne={posX}, Colonne={posY}");
+        Console.WriteLine($"L'animal s'est propagée sur cette position : Ligne={posX}, Colonne={posY}");
 
     }
 }

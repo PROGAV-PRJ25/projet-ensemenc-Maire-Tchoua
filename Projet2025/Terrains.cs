@@ -9,7 +9,7 @@ public abstract class Terrains {
     public int Capacite {get;} // Nombre de plantes max (nb de cases)
     public Plantes.TypeTerrain Type { get; protected set; } // Type de terrain 
     public List<Plantes> ListePlantes {get; set;} // Liste des plantes plantées dans le terrain
-    public List<Animaux> ListeAnimaux {get; set;} // Liste des animaux actuellement sur le terrain
+    public List<AnimauxNuisible> ListeAnimauxNuisibles {get; set;} // Liste des animaux actuellement sur le terrain
     public List<Maladies> ListeMaladie {get; set;}
 
 
@@ -24,6 +24,8 @@ public abstract class Terrains {
         Capacite = Lignes*Colonnes; //pas necessaire?
         Type = type;
         ListePlantes = new List<Plantes>();
+        ListeAnimauxNuisibles = new List<AnimauxNuisible>();
+        ListeMaladie = new List<Maladies>();
         grille = new Plantes [Lignes,Colonnes];
         NivEau = nivEau;
         Absorption = absorption;
