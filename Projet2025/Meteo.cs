@@ -50,6 +50,12 @@ public class Meteo
                 terrain.ListeMaladie.Add(pythium);
                 potager.Contaminer(pythium, terrain);
             }
+
+            if(terrain.NivEau > terrain.CapaciteEauMax)
+            {
+                Console.WriteLine("Votre terrain est innondé");
+                potager.urgenceActive = true;
+            }
         }
     }
 
@@ -118,6 +124,7 @@ public class Meteo
                     p.nbFruitsActuel = 0;
             } 
         }
+        
         
     }
 }

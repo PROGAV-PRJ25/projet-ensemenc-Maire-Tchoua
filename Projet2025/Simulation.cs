@@ -448,11 +448,9 @@ public class Simulation {
             animal = t.ListeAnimauxNuisibles.First(a =>
                 (nomAnimal == "criquet" && a is Criquet) ||
                 (nomAnimal == "oiseaux" && a is Oiseaux) ||
-                (nomAnimal == "escargot" && a is Escargot)
-            );
+                (nomAnimal == "escargot" && a is Escargot));
 
             PotagerSimu.Chasser(animal, t);
-
         }
 
         if (choix == 2) // Traiter
@@ -468,33 +466,30 @@ public class Simulation {
             {
                 nomMaladie = Console.ReadLine()!.ToLower();
 
-                maladie = nomMaladie switch
-                {
-                    "pythium"           => new Pythium(),
-                    "anthracnose"       => new Anthracnose(),
-                    
-                    //_ => throw new InvalidOperationException("Animal non pris en charge.")
-                };
+                validMaladie = t.ListeMaladie.Any(a =>
+                    (nomMaladie == "pythium" && a is Pythium) ||
+                    (nomMaladie == "anthracnose" && a is Anthracnose)                    
+                );
 
-                if (t.ListeMaladie.Contains(maladie)) //On vérifie que l'animal existe sur le terrain
+                if (!validMaladie)
                 {
-                    validMaladie = true;
-                }
-                else
-                {
-                    validMaladie = false;
                     Console.Write("Animal inexistant sur ce terrain, entrez en un autre : ");
                 }
 
             } while (!validMaladie);
 
+            // Récupérer l’instance déjà présente
+            maladie = t.ListeMaladie.First(a =>
+                (nomMaladie == "pythium" && a is Pythium) ||
+                (nomMaladie == "anthracnose" && a is Anthracnose));
+            
             PotagerSimu.Traiter(maladie,t);
         }
 
         if (choix == 3)// Couvrir terrain
         {
             Terrains t = PotagerSimu.ListeTerrains[VerifierNumTerrain()];
-
+            PotagerSimu.Couvrir(t);
         }
 
         if (choix == 4) // Passer un jours

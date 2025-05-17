@@ -66,8 +66,7 @@ public class Potager
                 else
                     Console.Write($"croissance de {plante.croissanceActuelle}, ");
                 
-                //Console.Write($"besoin en eau : {plante.eauRecu/plante.BesoinEau}, ");
-                Console.Write($"besoin en eau : {plante.BesoinEau - plante.eauRecu}, "); //SI ratio négatif -> arroser
+                Console.Write($"besoin en eau : {plante.BesoinEau - plante.eauRecu}, "); //SI ratio négatif ne pas arroser
 
                 //Nb de fruits donnés
                 Console.Write($"nombre de fruits : {plante.nbFruitsActuel}. \n");
@@ -187,7 +186,8 @@ public class Potager
 
     public void Traiter(Maladies maladie, Terrains terrain)
     {
-        // La maladie est progressivement éradiquée 
+        maladie.DureeContamination -= 5;  // La maladie est progressivement éradiquée 
+        
         foreach (Plantes p in terrain.ListePlantes)
         {
             if(p.estMalade)
@@ -200,19 +200,28 @@ public class Potager
                 {
                     p.VitesseCroissance += 0.1;
                 }
-            }
 
-            maladie.DureeContamination -= 2;
-            if(maladie.DureeContamination == 0 )
-            {
-                terrain.ListeMaladie.Remove(maladie);
-                p.estMalade = false;
-                Console.WriteLine($"Votre plante ({p.coordX},{p.coordY}) n'est plus malade");
-            }
+                if(maladie.DureeContamination == 0 )
+                {
+                    terrain.ListeMaladie.Remove(maladie);
+                    p.estMalade = false;
+                    Console.WriteLine($"Votre plante ({p.coordX},{p.coordY}) n'est plus malade");
+                    urgenceActive = false;
+                }
+                else
+                     Console.WriteLine("Continuez de traiter votre plante");
+            }            
         }
+    }
 
-        if(terrain.ListeMaladie == null)
+    public void Couvrir(Terrains terrain)
+    {
+        terrain.NivEau -= 5;
+        Console.WriteLine("Le niveau d'eau du terrain diminue");
+        if(terrain.NivEau < terrain.CapaciteEauMax)
+        {
             urgenceActive = false;
+        }
     }
 
 
