@@ -3,25 +3,34 @@ public abstract class Maladies {
     public string Nom {get; set;}
     public double ProbabiliteContamination { get; set; }
 
+    public double DureeContamination {get; set;}
+
     public int posX;
     public int posY;
 
-    public Maladies(string nom, double prob)
+    public Maladies(string nom, double prob, double dureeConta)
     {
         Nom = nom;
         ProbabiliteContamination = prob;
+        DureeContamination = dureeConta;
     }
     
-    public void Propager()
+    public void Propager(Terrains terrain)
     {
         Random rnd = new Random();
-        int x  = rnd.Next(0, 1); // Coordonnées x,y de l'animal
-        int y = rnd.Next(0, 1);
+        int newX, newY;
+        do
+        {
+            newX = posX + rnd.Next(-1, 2); // -1, 0 ou 1
+            newY = posY + rnd.Next(-1, 2);
+        }
+        while (newX < 0 || newX >= terrain.Lignes || newY < 0 || newY >= terrain.Colonnes);
+
+        // Si on arrive ici, les coordonnées sont valides
+        posX = newX;
+        posY = newY;
         
-        posX += x;
-        posY += y;
-        
-        Console.WriteLine($"L'animal s'est propagée sur cette position : Ligne={posX}, Colonne={posY}");
+        Console.WriteLine($"La maladie s'est propagée sur cette position : Ligne={posX}, Colonne={posY}");
 
     }
 }

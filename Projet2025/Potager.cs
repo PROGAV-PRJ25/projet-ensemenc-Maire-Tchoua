@@ -82,7 +82,7 @@ public class Potager
         Random rnd = new Random();
         animal.posX  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de l'obstacle
         animal.posY = rnd.Next(0, terrain.Colonnes);
-
+        
         Console.WriteLine($"Un {animal.NomA} est apparut sur votre Terrain");
         Console.WriteLine($"Il est sur cette position : Ligne = {animal.posX}, Colonne = {animal.posY}"); 
 
@@ -182,8 +182,7 @@ public class Potager
     {
         terrain.ListeAnimauxNuisibles.Remove(animal);     // Supprime l'animal de la liste 
         Console.WriteLine($"Vous avez chasser {animal} de votre terrain");  
-        if(terrain.ListeAnimauxNuisibles == null)     
-            urgenceActive = false; 
+        urgenceActive = false; 
     }
 
     public void Traiter(Maladies maladie, Terrains terrain)
@@ -202,8 +201,16 @@ public class Potager
                     p.VitesseCroissance += 0.1;
                 }
             }
+
+            maladie.DureeContamination -= 2;
+            if(maladie.DureeContamination == 0 )
+            {
+                terrain.ListeMaladie.Remove(maladie);
+                p.estMalade = false;
+                Console.WriteLine($"Votre plante ({p.coordX},{p.coordY}) n'est plus malade");
+            }
         }
-        
+
         if(terrain.ListeMaladie == null)
             urgenceActive = false;
     }

@@ -62,7 +62,7 @@ public class Simulation {
     {
         saisonActuelle = ObtenirSaison(DateCourante);
         ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
-        Console.WriteLine("MODE URGENCE ACTIF !");
+        Console.WriteLine("\n MODE URGENCE ACTIF !");
         Console.WriteLine($"\n Jour {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
 
         Random rnd = new Random();
@@ -77,7 +77,7 @@ public class Simulation {
             {
                 if(cont <= m.ProbabiliteContamination)
                 {
-                    m.Propager();
+                    m.Propager(t);
                 }
                 PotagerSimu.Contaminer(m,t);
             }
@@ -85,7 +85,7 @@ public class Simulation {
             // Evolution des animaux
             foreach(AnimauxNuisible nuisible in t.ListeAnimauxNuisibles)
             {
-                nuisible.Deplacer();
+                nuisible.Deplacer(t);
                 PotagerSimu.Impacter(nuisible,t);
             }
         }
@@ -398,7 +398,7 @@ public class Simulation {
         int choix;
 
         Console.WriteLine("- Menu d'actions d'urgence -");
-        Console.WriteLine("1) Chasser les animaux, 2) Traiter une maladie, 3) Recouvrir le terrain");   // + eloigner les animaux, recouvrir un terrain, traiter la plante
+        Console.WriteLine("1) Chasser les animaux, 2) Traiter une maladie, 3) Recouvrir le terrain, 4) Passer un jour");   // + eloigner les animaux, recouvrir un terrain, traiter la plante
         Console.WriteLine("Entrez le numéro de votre choix :");
 
         do
@@ -423,38 +423,83 @@ public class Simulation {
             
             string nomAnimal;
             bool validAnimal; 
-            Console.Write("Quel animal voulez-vous chasser de votre terrain ? : ");
             AnimauxNuisible animal;
+
+            Console.Write("Quel animal voulez-vous chasser de votre terrain ? : ");
+            
             do
             {
                 nomAnimal = Console.ReadLine()!.ToLower();
 
-                animal = nomAnimal switch
-                {
-                    "criquet"           => new Criquet(),
-                    "oiseaux"           => new Oiseaux(),
-                    "escargot"          => new Escargot(),
-                    //_ => throw new InvalidOperationException("Animal non pris en charge.")
-                };
+                validAnimal = t.ListeAnimauxNuisibles.Any(a =>
+                    (nomAnimal == "criquet" && a is Criquet) ||
+                    (nomAnimal == "oiseaux" && a is Oiseaux) ||
+                    (nomAnimal == "escargot" && a is Escargot)
+                );
 
-                if (t.ListeAnimauxNuisibles.Contains(animal)) //On vérifie que l'animal existe sur le terrain
+                if (!validAnimal)
                 {
-                    validAnimal = true;
-                }
-                else
-                {
-                    validAnimal = false;
                     Console.Write("Animal inexistant sur ce terrain, entrez en un autre : ");
                 }
 
             } while (!validAnimal);
 
-            PotagerSimu.Chasser(animal,t);
+            // Récupérer l’instance déjà présente
+            animal = t.ListeAnimauxNuisibles.First(a =>
+                (nomAnimal == "criquet" && a is Criquet) ||
+                (nomAnimal == "oiseaux" && a is Oiseaux) ||
+                (nomAnimal == "escargot" && a is Escargot)
+            );
+
+            PotagerSimu.Chasser(animal, t);
+
         }
 
         if (choix == 2) // Traiter
         {
             Terrains t = PotagerSimu.ListeTerrains[VerifierNumTerrain()];
+            string nomMaladie;
+            bool validMaladie; 
+            Maladies maladie;
+
+            Console.Write("Quelle maladie voulez-vous traiter sur votre terrain ? : ");
+            
+            do
+            {
+                nomMaladie = Console.ReadLine()!.ToLower();
+
+                maladie = nomMaladie switch
+                {
+                    "pythium"           => new Pythium(),
+                    "anthracnose"       => new Anthracnose(),
+                    
+                    //_ => throw new InvalidOperationException("Animal non pris en charge.")
+                };
+
+                if (t.ListeMaladie.Contains(maladie)) //On vérifie que l'animal existe sur le terrain
+                {
+                    validMaladie = true;
+                }
+                else
+                {
+                    validMaladie = false;
+                    Console.Write("Animal inexistant sur ce terrain, entrez en un autre : ");
+                }
+
+            } while (!validMaladie);
+
+            PotagerSimu.Traiter(maladie,t);
+        }
+
+        if (choix == 3)// Couvrir terrain
+        {
+            Terrains t = PotagerSimu.ListeTerrains[VerifierNumTerrain()];
+
+        }
+
+        if (choix == 4) // Passer un jours
+        {
+            return;
 
         }
     }
