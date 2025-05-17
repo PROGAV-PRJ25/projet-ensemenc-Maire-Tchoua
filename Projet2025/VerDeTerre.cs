@@ -14,7 +14,7 @@ public class VerDeTerre : AnimauxUtiles
                 if (!p.estMature)
                 {
                     p.VitesseCroissance += Bienfait/10 ;    //Plante pousse + vite (0.2)
-                    Console.WriteLine("La plante pousse moins vite");
+                    Console.WriteLine("La plante pousse plus vite");
                 }
             }
         } 

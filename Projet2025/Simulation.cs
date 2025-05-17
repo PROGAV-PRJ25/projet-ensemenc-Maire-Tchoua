@@ -2,7 +2,7 @@ using System.Security.Cryptography.X509Certificates;
 
 public class Simulation {
 
-    private bool urgenceActive = false;
+    
     private Random rnd = new Random(); //Pas besoin pour l'instant
     public Plantes.Saisons saisonActuelle;
     public double tempActuelle;
@@ -62,10 +62,33 @@ public class Simulation {
     {
         saisonActuelle = ObtenirSaison(DateCourante);
         ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
-        Console.WriteLine($"\n Semaine du {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
+        Console.WriteLine("\n MODE URGENCE ACTIF !");
+        Console.WriteLine($"\n Jour {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
+
+        Random rnd = new Random();
+        int cont = rnd.Next(0, 101);
 
         // Avancer de jour en jour
 
+        foreach (Terrains t in PotagerSimu.ListeTerrains)
+        {
+            // Evolution des maladies
+            foreach (Maladies m in t.ListeMaladie)
+            {
+                if(cont <= m.ProbabiliteContamination)
+                {
+                    m.Propager(t);
+                }
+                PotagerSimu.Contaminer(m,t);
+            }
+
+            // Evolution des animaux
+            foreach(AnimauxNuisible nuisible in t.ListeAnimauxNuisibles)
+            {
+                nuisible.Deplacer(t);
+                PotagerSimu.Impacter(nuisible,t);
+            }
+        }
 
     }
 
@@ -79,7 +102,7 @@ public class Simulation {
 
         do
         {
-            if (!urgenceActive)
+            if (!PotagerSimu.urgenceActive)
             {
                 Console.WriteLine("Continuer la simulation ?");
                 reponse = Console.ReadLine()!;
@@ -96,9 +119,11 @@ public class Simulation {
             }
             else 
             {
-                // Continuer simulation ?
                 DateCourante = DateCourante.AddDays(1);
                 ModeUrgence();
+                ChoisirActionUrgente();
+                
+                // Continuer simulation ?  
             }
 
         } while (continuer);
@@ -166,6 +191,29 @@ public class Simulation {
         }
     }
 
+    // Vérification de saisi du numéro de terrain
+    int VerifierNumTerrain()
+    {
+        bool idxValide;
+        int index;
+        Console.Write("Numéro du terrain sur lequel vous voulez agir : ");
+        do
+        {
+            if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
+            {
+                idxValide = true;
+            }
+            else
+            {
+                idxValide = false;
+                Console.Write("Index invalide, entrez un nouveau numéro : ");
+            }
+
+        } while (!idxValide);
+
+        return index;  
+    }
+
     // Gerer les actions du joueur à chaque tour
     private void ChoisirAction() {  // Retourne le choix du joueur
         
@@ -173,14 +221,14 @@ public class Simulation {
         int choix = 0;
 
         Console.WriteLine("- Menu d'actions -");
-        Console.WriteLine("1) Arroser un terrain, 2) Planter une plante, 3) Ajouter un terrain, 4) Traiter une maladie, 5) Récolter un fruit, 6) Passer la semaine");   // + eloigner les animaux ?? recouvrir un terrain ??
+        Console.WriteLine("1) Arroser un terrain, 2) Planter une plante, 3) Ajouter un terrain, 4) Récolter un fruit, 5) Passer la semaine");   // + eloigner les animaux ?? recouvrir un terrain ??
         Console.WriteLine("Entrez le numéro de votre choix :");
 
         do
         {
             string reponse = Console.ReadLine()!;
 
-            if (int.TryParse(reponse, out choix) && choix >= 1 && choix <= 6)
+            if (int.TryParse(reponse, out choix) && choix >= 1 && choix <= 5)
             {
                 choixValide = true;
             }
@@ -194,25 +242,10 @@ public class Simulation {
 
         if (choix == 1) // Arroser
         {
-            bool idxValide = true;
-            int index;
             bool qteValide = true;
             double quantité;
 
-            Console.Write("Numéro du terrain à arroser : ");
-            do
-            {
-                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
-                {
-                    idxValide = true;
-                }
-                else
-                {
-                    idxValide = false;
-                    Console.Write("Index invalide, entrez un nouveau numéro : ");
-                }
-
-            } while (!idxValide);
+            int index = VerifierNumTerrain();
 
             Console.Write("Quantité d’eau à verser (entre 1 et 100): "); // Limite d'eau dispo par tour à gerer /!\
             do
@@ -234,12 +267,10 @@ public class Simulation {
 
         if (choix == 2) //Planter
         {
-            bool idxValide = true;
-            int index;
             int ligne;
             int col;
-            bool nomPlanteValide = true;
-            bool saisonSemiValide = true;
+            bool nomPlanteValide;
+            bool saisonSemiValide;
             string nomPlante;
             Plantes planteASemer = null;
 
@@ -286,22 +317,8 @@ public class Simulation {
             } while (!saisonSemiValide);
 
             //Demander le terrain sur lequel semer
-            Console.Write("Numéro du terrain sur lequel planter : ");
-            do
-            {
-                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
-                {
-                    idxValide = true;
-                }
-                else
-                {
-                    idxValide = false;
-                    Console.Write("Index invalide, entrez un nouveau numéro : ");
-                }
-
-            } while (!idxValide);
-
-            Terrains terrain = PotagerSimu.ListeTerrains[index];   // On recupère le terrain choisi
+            
+            Terrains terrain = PotagerSimu.ListeTerrains[VerifierNumTerrain()];   // On recupère le terrain choisi
 
             //Demander l'emplacement
             do 
@@ -359,41 +376,127 @@ public class Simulation {
             PotagerSimu.ListeTerrains.Add(terrain); // Terrain ajouté
         }
 
-        if (choix == 4) //Traiter une maladie
+
+        if (choix == 4) //Recolter des fruits sur un terrain
         {
-
-        }
-
-        if (choix == 5) //Recolter des fruits sur un terrain
-        {
-            bool idxValide = true;
-            int index;
-            
-            Console.Write("Numéro du terrain sur lequel vous voulez recolter des fruits : ");
-            do
-            {
-                if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index <= PotagerSimu.ListeTerrains.Count)
-                {
-                    idxValide = true;
-                }
-                else
-                {
-                    idxValide = false;
-                    Console.Write("Index invalide, entrez un nouveau numéro : ");
-                }
-
-            } while (!idxValide);
-            Terrains terrain = PotagerSimu.ListeTerrains[index];   // On recupère le terrain choisi
+            Terrains terrain = PotagerSimu.ListeTerrains[VerifierNumTerrain()];   // On recupère le terrain choisi
 
             PotagerSimu.Recolter(terrain);
 
         }
 
-        if (choix == 6) //Continuer la simu
+        if (choix == 5) //Continuer la simu
         {
             return;
         }
     
+    }
+
+    public void ChoisirActionUrgente()
+    {
+        bool choixValide;
+        int choix;
+
+        Console.WriteLine("- Menu d'actions d'urgence -");
+        Console.WriteLine("1) Chasser les animaux, 2) Traiter une maladie, 3) Recouvrir le terrain, 4) Passer un jour");   // + eloigner les animaux, recouvrir un terrain, traiter la plante
+        Console.WriteLine("Entrez le numéro de votre choix :");
+
+        do
+        {
+            string reponse = Console.ReadLine()!;
+
+            if (int.TryParse(reponse, out choix) && choix >= 1 && choix <= 6)
+            {
+                choixValide = true;
+            }
+            else 
+            { 
+                Console.WriteLine("Choix invalide, recommencez.");
+                choixValide = false;
+            }
+
+        } while (!choixValide);
+
+        if (choix == 1) // Chasser
+        {
+            Terrains t = PotagerSimu.ListeTerrains[VerifierNumTerrain()];
+            
+            string nomAnimal;
+            bool validAnimal; 
+            AnimauxNuisible animal;
+
+            Console.Write("Quel animal voulez-vous chasser de votre terrain ? : ");
+            
+            do
+            {
+                nomAnimal = Console.ReadLine()!.ToLower();
+
+                validAnimal = t.ListeAnimauxNuisibles.Any(a =>
+                    (nomAnimal == "criquet" && a is Criquet) ||
+                    (nomAnimal == "oiseaux" && a is Oiseaux) ||
+                    (nomAnimal == "escargot" && a is Escargot)
+                );
+
+                if (!validAnimal)
+                {
+                    Console.Write("Animal inexistant sur ce terrain, entrez en un autre : ");
+                }
+
+            } while (!validAnimal);
+
+            // Récupérer l’instance déjà présente
+            animal = t.ListeAnimauxNuisibles.First(a =>
+                (nomAnimal == "criquet" && a is Criquet) ||
+                (nomAnimal == "oiseaux" && a is Oiseaux) ||
+                (nomAnimal == "escargot" && a is Escargot));
+
+            PotagerSimu.Chasser(animal, t);
+        }
+
+        if (choix == 2) // Traiter
+        {
+            Terrains t = PotagerSimu.ListeTerrains[VerifierNumTerrain()];
+            string nomMaladie;
+            bool validMaladie; 
+            Maladies maladie;
+
+            Console.Write("Quelle maladie voulez-vous traiter sur votre terrain ? : ");
+            
+            do
+            {
+                nomMaladie = Console.ReadLine()!.ToLower();
+
+                validMaladie = t.ListeMaladie.Any(a =>
+                    (nomMaladie == "pythium" && a is Pythium) ||
+                    (nomMaladie == "anthracnose" && a is Anthracnose)                    
+                );
+
+                if (!validMaladie)
+                {
+                    Console.Write("Animal inexistant sur ce terrain, entrez en un autre : ");
+                }
+
+            } while (!validMaladie);
+
+            // Récupérer l’instance déjà présente
+            maladie = t.ListeMaladie.First(a =>
+                (nomMaladie == "pythium" && a is Pythium) ||
+                (nomMaladie == "anthracnose" && a is Anthracnose));
+            
+            PotagerSimu.Traiter(maladie,t);
+        }
+
+        if (choix == 3)// Couvrir terrain
+        {
+            Terrains t = PotagerSimu.ListeTerrains[VerifierNumTerrain()];
+            PotagerSimu.Couvrir(t);
+        }
+
+        if (choix == 4) // Passer un jours
+        {
+            return;
+
+        }
     }
 
 

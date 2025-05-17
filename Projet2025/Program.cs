@@ -1,5 +1,5 @@
 ﻿Potager monPotager = new Potager();
-monPotager.AjouterTerrain(new Terre(5,5));
+monPotager.AjouterTerrain(new Terre(3,3));
 
 Meteo maMétéo = new Meteo(0,0);
 
