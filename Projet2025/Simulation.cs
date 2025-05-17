@@ -159,7 +159,7 @@ public class Simulation {
 
         Console.WriteLine("- Menu d'actions -");
         Console.WriteLine($"Vous pouvez effectuer {nbActionsMax} actions maximum sur ce tour.");
-        Console.WriteLine("1) Arroser un terrain, 2) Planter une plante, 3) Ajouter un terrain, 4) Récolter un fruit, 5) Passer la semaine");   // + eloigner les animaux ?? recouvrir un terrain ??
+        Console.WriteLine("1) Arroser un terrain, 2) Arroser une plante, 3) Planter une plante, 4) Ajouter un terrain, 5) Récolter un fruit, 6) Passer la semaine");   // + eloigner les animaux ?? recouvrir un terrain ??
         Console.WriteLine("Entrez le numéro de votre choix :");
 
         do
@@ -181,7 +181,47 @@ public class Simulation {
 
             } while (!choixValide);
 
-            if (choix == 1) // Arroser une plante
+            if (choix == 1) // Arroser un terrain
+            {
+                bool idxValide = true;
+                int index;
+                bool qteValide = true;
+                double quantité;
+
+                Console.Write("Numéro du terrain à arroser : ");
+                do
+                {
+                    if (int.TryParse(Console.ReadLine()!, out index) && index >= 0 && index < PotagerSimu.ListeTerrains.Count)
+                    {
+                        idxValide = true;
+                    }
+                    else
+                    {
+                        idxValide = false;
+                        Console.Write("Index invalide, entrez un nouveau numéro : ");
+                    }
+
+                } while (!idxValide);
+
+                Console.Write("Quantité d’eau à verser (entre 1 et 100): ");
+                do
+                {
+                    if (double.TryParse(Console.ReadLine()!, out quantité) && quantité >= 1 && quantité <= 100)
+                    {
+                        qteValide = true;
+                    }
+                    else
+                    {
+                        qteValide = false;
+                        Console.Write("Quantité invalide, entrez en une nouvelle : ");
+                    }
+
+                } while (!qteValide);
+
+                PotagerSimu.ArroserTerrain(index, quantité);   //On arrose le terrain
+            }
+
+            if (choix == 2) // Arroser une plante
             {
                 bool idxValide = true;
                 bool coordXValide = true;
@@ -208,7 +248,7 @@ public class Simulation {
 
                 } while (!idxValide);
 
-                Console.Write("Quantité d’eau à verser (entre 1 et 100): "); // Limite d'eau dispo par tour à gerer /!\
+                Console.Write("Quantité d’eau à verser (entre 1 et 100): "); 
                 do
                 {
                     if (double.TryParse(Console.ReadLine()!, out quantité) && quantité >= 1 && quantité <= 100)
@@ -255,11 +295,11 @@ public class Simulation {
 
                     } while (!coordYValide);
 
-                } while(!PotagerSimu.Arroser(index, coordX, coordY, quantité)); //tant que la plante n'a pas été trouvée
+                } while(!PotagerSimu.ArroserPlante(index, coordX, coordY, quantité)); //tant que la plante n'a pas été trouvée
 
             }
 
-            if (choix == 2) //Planter
+            if (choix == 3) //Planter
             {
                 bool idxValide = true;
                 int index;
@@ -345,7 +385,7 @@ public class Simulation {
             
             }
 
-            if (choix == 3) //Ajouter un terrain au potager
+            if (choix == 4) //Ajouter un terrain au potager
             {
                 bool typeValide = true;
                 string nomType;
@@ -388,7 +428,7 @@ public class Simulation {
                 PotagerSimu.ListeTerrains.Add(terrain); // Terrain ajouté
             }
 
-            if (choix == 4) //Recolter un fruit
+            if (choix == 5) //Recolter un fruit
             {
                 bool idxValide = true;
                 int index;
@@ -414,7 +454,7 @@ public class Simulation {
 
             }
 
-            if (choix == 5) //Continuer la simu
+            if (choix == 6) //Continuer la simu
             {
                 maxAtteint = true;
                 return;

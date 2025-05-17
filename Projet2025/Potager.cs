@@ -24,7 +24,20 @@ public class Potager
         Console.WriteLine($"Un terrain de {terrain.Type} et de capacité {terrain.Capacite} a été ajouté.");
     }
 
-    public bool Arroser(int indexTerrain, int posX, int posY, double quantEau) // Choix du terrain à arroser en fonction de son indice dans la liste de terrains de potager
+    //Arrosage d'un terrain complet
+    public void ArroserTerrain(int indexTerrain, double quantEau) // Choix du terrain à arroser en fonction de son indice dans la liste de terrains de potager
+    {
+        Terrains terrain = ListeTerrains[indexTerrain];
+        terrain.NivEau +=  quantEau - quantEau*terrain.Absorption;
+
+        foreach (Plantes plante in terrain.ListePlantes)
+        {
+            plante.eauRecu = terrain.NivEau;
+        }
+    }
+    
+    //Arrosage ciblée sur une plante
+    public bool ArroserPlante(int indexTerrain, int posX, int posY, double quantEau) // Choix du terrain à arroser en fonction de son indice dans la liste de terrains de potager
     {                                                                 // Arroser une plante spécifique dans le terrain (selon ses coordonnées)
         Terrains terrain = ListeTerrains[indexTerrain];
         //terrain.NivEau +=  quantEau - quantEau*terrain.Absorption; 
@@ -40,7 +53,6 @@ public class Potager
         }
         Console.WriteLine($"La plante n'a pas été trouvée.");
         return false;
-
     }
 
     // Affiche l'état complet du potager (tous les terrains)
@@ -81,6 +93,8 @@ public class Potager
 
             }
         }
+         
+        Console.WriteLine($"Nombre de fruits dans la réserve : {ReserveFraise} fraises, {ReservePomme} pommes");
     }
 
     
