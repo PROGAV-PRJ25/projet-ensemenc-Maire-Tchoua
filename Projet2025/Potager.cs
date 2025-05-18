@@ -4,8 +4,11 @@ public class Potager
     public List<Terrains> ListeTerrains { get; }
     public bool urgenceActive = false;
 
+    
     public double ReserveFraise {get; set;} // Nombre de fruits dans la reserve
     public double ReservePomme {get; set;}
+    public double index = 0;
+    
     // Construteur
     public Potager()
     {
@@ -18,9 +21,11 @@ public class Potager
     // Actions du joueur sur son potager
 
     public void AjouterTerrain(Terrains terrain) //Demander le type et la taille !
-    {
+    {   
+        terrain.numTerrain = index;
         ListeTerrains.Add(terrain);
         Console.WriteLine($"Un terrain de {terrain.Type} et de capacité {terrain.Capacite} a été ajouté.");
+        index ++;
     }
 
     public void Arroser(int indexTerrain, double quantEau) // Choix du terrain à arroser en fonction de son indice dans la liste de terrains de potager
@@ -35,20 +40,34 @@ public class Potager
 
     }
 
+    public bool ArroserPlante(int indexTerrain, int posX, int posY, double quantEau) // Choix du terrain à arroser en fonction de son indice dans la liste de terrains de potager
+    {                                                                 // Arroser une plante spécifique dans le terrain (selon ses coordonnées)
+        Terrains terrain = ListeTerrains[indexTerrain];
+        //terrain.NivEau +=  quantEau - quantEau*terrain.Absorption; 
+
+        foreach (Plantes plante in terrain.ListePlantes)
+        {
+            if (plante.coordX == posX && plante.coordY == posY) 
+            {
+                plante.eauRecu += quantEau;             //on arrose direct la plante
+                Console.WriteLine($"{plante.Nom} ({posX},{posY}) du terrain {indexTerrain} arrosée. Son besoin en eau actuel est de {plante.BesoinEau-plante.eauRecu}.");
+                return true;
+            }
+        }
+        Console.WriteLine($"La plante n'a pas été trouvée.");
+        return false;
+    }
+
     // Affiche l'état complet du potager (tous les terrains)
     public void AfficherEtat()
     {
-        int index = 0;
-
         Console.WriteLine($"\n=== État du potager ===");
 
         foreach (var terrain in ListeTerrains)
         {
-            Console.WriteLine($"Terrain numéro {index} de type {terrain.Type}.");
+            Console.WriteLine($"Terrain numéro {terrain.numTerrain} de type {terrain.Type}.");
             
             terrain.AfficherConsole();
-
-            index ++;
             
             foreach (var plante in terrain.ListePlantes)
             {
@@ -82,7 +101,7 @@ public class Potager
         animal.posX  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de l'obstacle
         animal.posY = rnd.Next(0, terrain.Colonnes);
         
-        Console.WriteLine($"Un {animal.NomA} est apparut sur votre Terrain");
+        Console.WriteLine($"Un {animal.NomA} est apparut sur le Terrain {terrain.numTerrain}");
         Console.WriteLine($"Il est sur cette position : Ligne = {animal.posX}, Colonne = {animal.posY}"); 
 
     }
@@ -96,7 +115,7 @@ public class Potager
                 Console.WriteLine("Votre plante est en danger !");
                 animal.Nuire(terrain);
             }
-            urgenceActive = true; // Déclanche le mode Urgence même si l'animal n'est pas sur une plante 
+            terrain.urgenceAnimaux = true; // Déclanche le mode Urgence même si l'animal n'est pas sur une plante 
         }
        
 
@@ -112,7 +131,8 @@ public class Potager
         Random rnd = new Random();
         maladie.posX  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de la maladie
         maladie.posX = rnd.Next(0, terrain.Colonnes);
-        Console.WriteLine($"Une maladie est apparue sur cette position : Ligne={maladie.posX}, Colonne={maladie.posX}");
+        Console.WriteLine($"La maladie {maladie.Nom} est apparue sur le Terrain {terrain.numTerrain}");
+        Console.WriteLine($"Elle est sur cette position : ({maladie.posX},{maladie.posX})");
     }
     public void Contaminer(Maladies maladie, Terrains terrain)
     {         
@@ -127,7 +147,7 @@ public class Potager
                     pythium.Affaiblir(p);
             }
         }    
-        urgenceActive = true;  // Déclanche le mode urgence  
+        terrain.urgenceMaladie = true;  // Déclanche le mode urgence  
     }
 
     /*
@@ -166,11 +186,11 @@ public class Potager
             }           
         }
         if (nbrFraiseRecolte == 0 && typeFruits == "fraise")
-                Console.WriteLine("Il n'y a pas de fraises à récolter sur ce terrain");
+                Console.WriteLine($"Il n'y a pas de fraises à récolter sur le terrain {terrain.numTerrain}");
         if (nbrPommeRecolte == 0 && typeFruits == "pomme")
-            Console.WriteLine("Il n'y a pas de pommes à récolter sur ce terrain");
+            Console.WriteLine($"Il n'y a pas de pommes à récolter sur le terrain {terrain.numTerrain}");
 
-        Console.WriteLine($"Vous avez récolté {nbrPommeRecolte} pommes et {nbrFraiseRecolte} fraises sur ce terrain");
+        Console.WriteLine($"Vous avez récolté {nbrPommeRecolte} pommes et {nbrFraiseRecolte} fraises sur le terrain {terrain.numTerrain}");
 
         ReserveFraise += nbrFraiseRecolte;
         ReservePomme += nbrPommeRecolte;  
@@ -180,8 +200,8 @@ public class Potager
     public void Chasser(AnimauxNuisible animal, Terrains terrain)
     {
         terrain.ListeAnimauxNuisibles.Remove(animal);     // Supprime l'animal de la liste 
-        Console.WriteLine($"Vous avez chasser {animal} de votre terrain");  
-        urgenceActive = false; 
+        Console.WriteLine($"Vous avez chasser {animal} du terrain {terrain.numTerrain}");  
+        terrain.urgenceAnimaux = false; 
     }
 
     public void Traiter(Maladies maladie, Terrains terrain)
@@ -206,22 +226,36 @@ public class Potager
                     terrain.ListeMaladie.Remove(maladie);
                     p.estMalade = false;
                     Console.WriteLine($"Votre plante ({p.coordX},{p.coordY}) n'est plus malade");
-                    urgenceActive = false;
+                    terrain.urgenceMaladie = false;
                 }
                 else
-                     Console.WriteLine("Continuez de traiter votre plante");
+                    Console.WriteLine("Continuez de traiter votre plante");
             }            
         }
     }
 
     public void Couvrir(Terrains terrain)
     {
-        terrain.NivEau -= 5;
-        Console.WriteLine("Le niveau d'eau du terrain diminue");
+        terrain.NivEau -= 20;
+        Console.WriteLine($"Le niveau d'eau du terrain {terrain.numTerrain} diminue");
         if(terrain.NivEau < terrain.CapaciteEauMax)
         {
-            urgenceActive = false;
+            terrain.urgenceInondation = false;
         }
+    }
+
+    public void VerifierUrgence()
+    {
+        foreach (Terrains t in ListeTerrains)
+        {
+            if (t.urgenceAnimaux == true || t.urgenceInondation == true || t.urgenceMaladie == true)
+            {
+                urgenceActive = true;
+                break; // Plus besoin de continuer à parcourir la liste
+            }
+            else
+            urgenceActive = false;
+        } 
     }
 
 

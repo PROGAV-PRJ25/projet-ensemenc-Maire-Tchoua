@@ -12,9 +12,12 @@ public abstract class Terrains {
     public List<AnimauxNuisible> ListeAnimauxNuisibles {get; set;} // Liste des animaux actuellement sur le terrain
     public List<Maladies> ListeMaladie {get; set;}
 
-
     public Plantes[,] grille;   //Matrice des plantes pour gérer positions et espacement
+    public double numTerrain;
 
+    public bool urgenceMaladie = false;
+    public bool urgenceInondation =false;
+    public bool urgenceAnimaux = false;
 
     // Constructeur
     protected Terrains(int lignes, int colonnes, Plantes.TypeTerrain type, double nivEau, double absorption, double capaciteEauMax)
@@ -30,6 +33,7 @@ public abstract class Terrains {
         NivEau = nivEau;
         Absorption = absorption;
         CapaciteEauMax = capaciteEauMax;
+        
     }
 
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne

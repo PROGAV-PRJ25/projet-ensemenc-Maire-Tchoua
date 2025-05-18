@@ -54,8 +54,8 @@ public class Meteo
 
             if(terrain.NivEau > terrain.CapaciteEauMax)
             {
-                Console.WriteLine("Votre terrain est innondé");
-                potager.urgenceActive = true;
+                Console.WriteLine($"Le terrain {terrain.numTerrain} est innondé");
+                terrain.urgenceInondation = true;
             }
         }
     }
@@ -93,7 +93,7 @@ public class Meteo
                 potager.Impacter(criquet, terrain); // Alors un criquet apparait
             }  
 
-            if(ContexteSimulation.SaisonEnCours is Plantes.Saisons.Printemps && ContexteSimulation.TempEnCours > 15)   // Au printemps les oiseaux apparaissent 
+            if((ContexteSimulation.SaisonEnCours is Plantes.Saisons.Printemps) && (ContexteSimulation.TempEnCours > 15))   // Au printemps les oiseaux apparaissent 
             {
                 Oiseaux oiseaux = new Oiseaux();
                 potager.ApparaitAnimaux(oiseaux, terrain);

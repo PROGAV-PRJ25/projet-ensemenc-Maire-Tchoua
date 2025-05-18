@@ -1,6 +1,6 @@
 public class Anthracnose : Maladies 
 {
-    public Anthracnose() : base(nom : "Moniliose", prob : 30, dureeConta : 10 )
+    public Anthracnose() : base(nom : "Anthracnose", prob : 30, dureeConta : 10 )
     {}
 
     public void Pourrir(Plantes plante)
