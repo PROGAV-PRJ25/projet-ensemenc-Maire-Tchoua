@@ -9,27 +9,32 @@ public abstract class Terrains {
     public int Capacite {get;} // Nombre de plantes max (nb de cases)
     public Plantes.TypeTerrain Type { get; protected set; } // Type de terrain 
     public List<Plantes> ListePlantes {get; set;} // Liste des plantes plantées dans le terrain
-    
-    //public List<AnimauxNuisible> ListeAnimauxNuisibles {get; set;} // Liste des animaux actuellement sur le terrain
-    //public List<AnimauxUtiles> ListeAnimauxUtiles {get; set;} // Liste des animaux actuellement sur le terrain
-
-
+    public List<AnimauxNuisible> ListeAnimauxNuisibles {get; set;} // Liste des animaux actuellement sur le terrain
+    public List<Maladies> ListeMaladie {get; set;}
 
     public Plantes[,] grille;   //Matrice des plantes pour gérer positions et espacement
+    public double numTerrain;
 
+    public bool urgenceMaladie = false;
+    public bool urgenceInondation =false;
+    public bool urgenceAnimaux = false;
+    public bool urgenceMauvaiseHerbe = false;
 
     // Constructeur
     protected Terrains(int lignes, int colonnes, Plantes.TypeTerrain type, double nivEau, double absorption, double capaciteEauMax)
     {
         Lignes = lignes;
         Colonnes = colonnes;
-        Capacite = Lignes*Colonnes; //pas necessaire?
+        Capacite = Lignes * Colonnes; //pas necessaire?
         Type = type;
         ListePlantes = new List<Plantes>();
-        grille = new Plantes [Lignes,Colonnes];
+        ListeAnimauxNuisibles = new List<AnimauxNuisible>();
+        ListeMaladie = new List<Maladies>();
+        grille = new Plantes[Lignes, Colonnes];
         NivEau = nivEau;
         Absorption = absorption;
         CapaciteEauMax = capaciteEauMax;
+
     }
 
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne

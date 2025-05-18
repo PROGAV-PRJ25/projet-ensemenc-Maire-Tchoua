@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 public class Meteo
 { 
     public int QuantEau {get;set;}
@@ -11,35 +13,50 @@ public class Meteo
     public void Pleuvoir(Potager potager) 
     {
         Random rnd = new Random();
-        QuantEau = rnd.Next(10,101); // Quantité d'eau tombée sur le potager
+        QuantEau = rnd.Next(50,200); // Quantité d'eau tombée sur le potager
         QuantLum = rnd.Next(0,15); // Quantité de lum reçue sur le potager
-        int comptIndex = 0;
-
+        
         foreach (Terrains terrain in potager.ListeTerrains)
         {
-            terrain.NivEau +=  QuantEau - QuantEau*terrain.Absorption; // Le niveau d'eau danns le terrain augmente selon la quantité d'eau qu'il a absorbé
+            // Evolution de l'état du terrain 
+            terrain.NivEau += QuantEau - QuantEau * terrain.Absorption; // Le niveau d'eau danns le terrain augmente selon la quantité d'eau qu'il a absorbé
             foreach (Plantes p in terrain.ListePlantes)
             {
                 p.eauRecu = terrain.NivEau; // L'eau recu par la plante correspond au niveau d'eau restant dans le terrain
                 p.lumRecu = QuantLum;
             }
-            
-            ContexteSimulation.TempEnCours -= 3; // On pert 3 degrés quand il pleut
 
+            ContexteSimulation.TempEnCours -= 3; // On pert 3 degrés quand il pleut
+            terrain.NivEau = terrain.NivEau * 0.5;    // On baisse le niveau d'eau après que les plantes ait bu
+
+            // Obstacles 
             if (terrain is Terre && terrain.NivEau > 60)
             {
                 VerDeTerre verDeTerre = new VerDeTerre();
-                potager.Apparait(verDeTerre, comptIndex);
+                potager.ApparaitAnimaux(verDeTerre, terrain);
+                potager.Impacter(verDeTerre, terrain);
             }
             if ((terrain is Terre || terrain is Sable) && terrain.NivEau > 90) // Le ver de terre apparait sur du sable ou de la terre très humide
             {
                 Escargot escargot = new Escargot();
-                potager.Apparait(escargot, comptIndex);
+                potager.ApparaitAnimaux(escargot, terrain);
+                terrain.ListeAnimauxNuisibles.Add(escargot); // Ajoute l'escargot dans la liste des animaux nuisibles sur le terrain 
+                potager.Impacter(escargot, terrain);
             }
-            
-            comptIndex ++;  //index du terrain dans la liste
-            terrain.NivEau = terrain.NivEau*0.5;    // On baisse le niveau d'eau après que les plantes ait bu
 
+            if (ContexteSimulation.TempEnCours < 5 && terrain.NivEau > 80) // S'il fait trop froid et humide cette maladie apparait 
+            {
+                Pythium pythium = new Pythium();
+                potager.ApparaitMaladies(pythium, terrain);
+                terrain.ListeMaladie.Add(pythium);
+                potager.Contaminer(pythium, terrain);
+            }
+
+            if (terrain.NivEau > terrain.CapaciteEauMax)
+            {
+                Console.WriteLine($"Le terrain {terrain.numTerrain} est innondé");
+                terrain.urgenceInondation = true;
+            }
         }
     }
 
@@ -59,23 +76,41 @@ public class Meteo
             }
 
             ContexteSimulation.TempEnCours += 3; // On gagne 3 degrés avec le soleil
-
+            
+            // Obstacles 
             if (QuantLum > 30)
             {
                 Abeille abeille = new Abeille();
-                potager.Apparait(abeille, comptIndex); // une abeille apparait peu importe le terrain 
+                potager.ApparaitAnimaux(abeille, terrain);
+                potager.Impacter(abeille, terrain); // une abeille apparait peu importe le terrain 
             }
                 
             if (terrain is Sable && terrain.NivEau < 15) // si le terrain est du sable et qu'il est très sec
             {
                 Criquet criquet = new Criquet();
-                potager.Apparait(criquet, comptIndex); // Alors un criquet apparait
-            }     
-        }
+                potager.ApparaitAnimaux(criquet, terrain);
+                terrain.ListeAnimauxNuisibles.Add(criquet);
+                potager.Impacter(criquet, terrain); // Alors un criquet apparait
+            }  
 
-        comptIndex++;
-        
-    }
+            if((ContexteSimulation.SaisonEnCours is Plantes.Saisons.Printemps) && (ContexteSimulation.TempEnCours > 15))   // Au printemps les oiseaux apparaissent 
+            {
+                Oiseaux oiseaux = new Oiseaux();
+                potager.ApparaitAnimaux(oiseaux, terrain);
+                terrain.ListeAnimauxNuisibles.Add(oiseaux);
+                potager.Impacter(oiseaux,terrain);
+            }
+
+            if(ContexteSimulation.TempEnCours > 30 && terrain.NivEau < 15)   // Si il fait trop chaud et sec cette maladie apparait 
+            {
+                Anthracnose anthracnose = new Anthracnose();
+                potager.ApparaitMaladies(anthracnose, terrain);
+                terrain.ListeMaladie.Add(anthracnose);
+                potager.Contaminer(anthracnose, terrain);
+            }
+        }
+    }    
+    
 
     public void Greler(Potager potager)
     {
@@ -86,8 +121,12 @@ public class Meteo
             foreach (Plantes p in terrain.ListePlantes)
             {
                 if (p.nbFruitsActuel >= 2)
-                    p.nbFruitsActuel -= 2; // Détruit des fruits
+                    p.nbFruitsActuel -= 2; // Détruit 2 fruits
+                else
+                    p.nbFruitsActuel = 0;
             } 
         }
+        
+        
     }
 }

@@ -61,16 +61,23 @@ public class MauvaiseHerbe : Plantes {
                 {
                     if (newI > 0 && newI <= lignes && newJ > 0 && newJ <= colonnes)
                     {
-                         // Vérifier bornes et présence
+                        // Vérifier bornes et présence
                         if (terrain.grille[newI, newJ] == null)
                         {
                             terrain.Planter(new MauvaiseHerbe(), newI, newJ);
                         }
                         else if (!(terrain.grille[newI, newJ] is MauvaiseHerbe))
                         {
-                            // Tuer la plante existante
+                            Console.WriteLine($"Votre plante située sur le terrain {terrain.numTerrain} aux coordonnées ({newI},{newJ}) est menacée par une mauvaise herbe.");
+                            terrain.urgenceMauvaiseHerbe = true; //Mode urgence activé
+                            /*
+                            // Tuer la plante existante et la remplacer par une autre mauvaise herbe
+                            Plantes p = terrain.grille[newI, newJ];
                             terrain.SupprimerPlante(newI, newJ);
                             terrain.Planter(new MauvaiseHerbe(), newI, newJ);
+                            */
+                            
+
                         }
                         propagationReussie = true;
                     }

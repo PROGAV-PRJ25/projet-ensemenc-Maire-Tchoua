@@ -9,12 +9,10 @@ public class Oiseaux : AnimauxNuisible
         {
             if (p.coordX == posX && p.coordY == posY)
             {
-                if (!p.estMature)
+                if (p.estMature && p.nbFruitsActuel >= Degat)
                 {
-                    if(p.nbFruitsActuel >= Degat)
-                    {
-                        p.nbFruitsActuel -= Degat;
-                    }
+                    p.nbFruitsActuel -= Degat;  
+                    Console.WriteLine("L'oiseaux à mangé 2 fruits");
                 }
             }
         }

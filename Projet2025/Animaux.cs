@@ -13,6 +13,8 @@ public abstract class Animaux
         //Habitat = habitat;
     }
 
+    
+
     public virtual void Nuire(Terrains terrain) {}
     public virtual void Aider(Terrains terrain) {}
 
