@@ -47,6 +47,7 @@ public class Meteo
             if(ContexteSimulation.TempEnCours < 5 && terrain.NivEau > 80) // S'il fait trop froid et humide cette maladie apparait 
             {
                 Pythium pythium = new Pythium();
+                potager.ApparaitMaladies(pythium, terrain);
                 terrain.ListeMaladie.Add(pythium);
                 potager.Contaminer(pythium, terrain);
             }
@@ -103,6 +104,7 @@ public class Meteo
             if(ContexteSimulation.TempEnCours > 30 && terrain.NivEau < 15)   // Si il fait trop chaud et sec cette maladie apparait 
             {
                 Anthracnose anthracnose = new Anthracnose();
+                potager.ApparaitMaladies(anthracnose, terrain);
                 terrain.ListeMaladie.Add(anthracnose);
                 potager.Contaminer(anthracnose, terrain);
             }

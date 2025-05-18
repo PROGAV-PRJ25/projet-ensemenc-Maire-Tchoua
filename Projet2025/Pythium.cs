@@ -1,6 +1,6 @@
 public class Pythium : Maladies
 {
-    public Pythium() : base(nom : "Phylloxera", prob : 10, dureeConta : 15 )
+    public Pythium() : base(nom : "Pythium", prob : 10, dureeConta : 15 )
     {}
 
     public void Affaiblir(Plantes plante)

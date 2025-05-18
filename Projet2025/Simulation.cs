@@ -336,7 +336,7 @@ public class Simulation {
 
         if (choix == 3) //Ajouter un terrain au potager
         {
-            bool typeValide = true;
+            bool typeValide;
             string nomType;
             int ligne;
             int col;
@@ -473,7 +473,7 @@ public class Simulation {
 
                 if (!validMaladie)
                 {
-                    Console.Write("Animal inexistant sur ce terrain, entrez en un autre : ");
+                    Console.Write("Maladie inexistante sur ce terrain, entrez en une autre : ");
                 }
 
             } while (!validMaladie);
