@@ -2,14 +2,12 @@ using System.Security.Cryptography.X509Certificates;
 
 public class Simulation {
 
-    
     private Random rnd = new Random(); //Pas besoin pour l'instant
     public Plantes.Saisons saisonActuelle;
     public double tempActuelle;
-    public List<string> ListePlantes = new List<string> {"pomme","fraise"};   //Liste des types de plantes existantes. A completer en ajoutant les autres plantes!
+    public List<string> ListePlantes = new List<string> {"pomme","fraise","mauvaise herbe"};   //Liste des types de plantes existantes. A completer en ajoutant les autres plantes!
     public List<string> ListeTerrains = new List<string> {"terre","argile","sable"}; //Liste des types de terrains existants.
     
-
     public Potager PotagerSimu { get; }
     public Meteo MétéoSimu { get; set; } 
     public DateTime DateCourante { get; private set; } // Date courante dans la simulation (tour = 1 mois)
@@ -34,10 +32,12 @@ public class Simulation {
         GererMeteo();
         foreach (Terrains t in PotagerSimu.ListeTerrains)
         {
-            foreach(Plantes p in t.ListePlantes)
+            t.PropagerMauvaiseHerbe(); // Propagation des mauvaises herbes (s'il y en a)
+
+            foreach (Plantes p in t.ListePlantes)
             {
                 p.Pousser();
-                if ((p.SaisonFruits == saisonActuelle) && (p.estMature) && (p.nbFruitsActuel<p.NbFruitsMax)) // /!\ à la saison de récolte des fruits
+                if ((p.SaisonFruits == saisonActuelle) && (p.estMature) && (p.nbFruitsActuel < p.NbFruitsMax)) // /!\ à la saison de récolte des fruits
                 {
                     if (p.Nom == "Fraise")
                         p.nbFruitsActuel += 5;    //Si les conditions sont remplies, à chaque tours il peut pousser 5 fraises
@@ -58,17 +58,35 @@ public class Simulation {
 
     }
 
-    public void ModeUrgence()
+    public void ModeUrgence() //Avance de jour en jour
     {
         saisonActuelle = ObtenirSaison(DateCourante);
         ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
         Console.WriteLine("\n MODE URGENCE ACTIF !");
-        Console.WriteLine($"\n Jour {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
+        // Affichage de la date
+        Console.WriteLine($"Jour {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
+        Console.WriteLine();
+        //Afficher l'origine de l'urgence
+        int indexT = 0;
+        foreach (Terrains t in PotagerSimu.ListeTerrains)
+        {
+            if (t.urgenceAnimaux)
+                Console.WriteLine($"⚠️ Présence d'un animal nuisible sur le terrain {indexT}.");
+
+            if (t.urgenceMaladie)
+                Console.WriteLine($"⚠️ Présence d'une maladie sur le terrain {indexT}.");
+
+            if (t.urgenceInondation)
+                Console.WriteLine($"⚠️ Présence d'une innondation sur le terrain {indexT}.");
+
+            if (t.urgenceMauvaiseHerbe)
+                Console.WriteLine($"⚠️ Présence de mauvaises herbes sur le terrain {indexT}.");
+
+            indexT++;
+        }
 
         Random rnd = new Random();
         int cont = rnd.Next(0, 101);
-
-        // Avancer de jour en jour
 
         foreach (Terrains t in PotagerSimu.ListeTerrains)
         {
@@ -88,7 +106,6 @@ public class Simulation {
                 nuisible.Deplacer(t);
                 PotagerSimu.Impacter(nuisible, t);
             }
-            
         }
         ChoisirActionUrgente();
         
@@ -167,7 +184,7 @@ public class Simulation {
 
         ContexteSimulation.TempEnCours = tempActuelle;
 
-        Console.WriteLine("- Météo de la semaine -");
+        Console.WriteLine("\n - Météo de la semaine -");
         Console.WriteLine($"Temperature moyenne : {tempActuelle}°C");
 
         // Type de Météo aléatoire chaque semaine (pluie, soleil, grele)
@@ -218,24 +235,24 @@ public class Simulation {
 
     // Gerer les actions du joueur à chaque tour
     private void ChoisirAction() 
-    {  // Retourne le choix du joueur
-        
+    {  
         bool choixValide = true;
         int choix = 0;
         int comptActions = 0; 
         int nbActionsMax = 3*PotagerSimu.ListeTerrains.Count(); // nb actions max par tours proportinnel au nb de terrains dans le potager
         bool maxAtteint = false; 
 
-        Console.WriteLine("- Menu d'actions -");
+        Console.WriteLine("\n - Menu d'actions -");
         Console.WriteLine($"Vous pouvez effectuer {nbActionsMax} actions maximum sur ce tour.");
-        Console.WriteLine("1) Arroser un terrain, 2) Arroser une plante, 3) Planter une plante, 4) Ajouter un terrain, 5) Récolter un fruit, 6) Passer la semaine"); 
+        Console.WriteLine("1) Arroser un terrain, 2) Arroser une plante, 3) Planter une plante, 4) Ajouter un terrain, 5) Récolter un fruit, 6) Désherber, 7) Passer la semaine"); 
         Console.WriteLine("Entrez le numéro de votre choix :");
-        do{
+        do
+        {
             do
             {
                 string reponse = Console.ReadLine()!;
 
-                if (int.TryParse(reponse, out choix) && choix >= 1 && choix <= 6)
+                if (int.TryParse(reponse, out choix) && choix >= 1 && choix <= 7)
                 {
                     choixValide = true;
                 }
@@ -335,7 +352,6 @@ public class Simulation {
 
             }
 
-
             if (choix == 3) //Planter
             {
                 int ligne;
@@ -367,8 +383,9 @@ public class Simulation {
 
                     Plantes plante = nomPlante switch
                     {
-                        "pomme"          => new Pomme(),
-                        "fraise"         => new Fraise(),
+                        "pomme" => new Pomme(),
+                        "fraise" => new Fraise(),
+                        "mauvaise herbe" => new MauvaiseHerbe()
                     };
 
                     // Vérif de la saison de semis de la plante -> si aucune plante à planter dans cette saison (à gérer!)
@@ -389,7 +406,6 @@ public class Simulation {
                 } while (!saisonSemiValide);
 
                 //Demander le terrain sur lequel semer
-                
                 Terrains terrain = PotagerSimu.ListeTerrains[VerifierNumTerrain()];   // On recupère le terrain choisi
 
                 //Demander l'emplacement
@@ -403,7 +419,6 @@ public class Simulation {
                     col = int.Parse(Console.ReadLine()!);
 
                 } while(terrain.Planter(planteASemer, ligne, col) == false); // Tant que l'emplacement est mauvais, redemander les coordonnées
-            
             }
 
             if (choix == 4) //Ajouter un terrain au potager
@@ -449,17 +464,21 @@ public class Simulation {
                 PotagerSimu.AjouterTerrain(terrain); // Terrain ajouté
             }
 
-
             if (choix == 5) //Recolter des fruits sur un terrain
             {
                 comptActions++;
                 Terrains terrain = PotagerSimu.ListeTerrains[VerifierNumTerrain()];   // On recupère le terrain choisi
-
-                PotagerSimu.Recolter(terrain);
-
+                PotagerSimu.Recolter(terrain);  // On récolte
             }
 
-            if (choix == 6) //Continuer la simu
+            if (choix == 6)
+            {
+                comptActions++;
+                Terrains terrain = PotagerSimu.ListeTerrains[VerifierNumTerrain()];   // On recupère le terrain choisi
+                PotagerSimu.Desherber(terrain); //On désherbe
+            }
+
+            if (choix == 7) //Continuer la simu
             {
                 return;
             }
@@ -469,10 +488,10 @@ public class Simulation {
             else
             {
                 Console.WriteLine($"Il vous reste {nbActionsMax-comptActions} actions à utiliser.");
-                Console.WriteLine($"Tapez 1, 2, 3 ou 4 pour effectuer une action ; ou 6 pour continuer la simulation :");
+                Console.WriteLine($"Tapez 1, 2, 3, 4, 5 ou 6 pour effectuer une action ; 7 pour continuer la simulation :");
             } 
         
-        }while(!maxAtteint);
+        } while(!maxAtteint);
     }
     
     public void ChoisirActionUrgente()
@@ -480,15 +499,15 @@ public class Simulation {
         bool choixValide;
         int choix;
 
-        Console.WriteLine("- Menu d'actions d'urgence -");
-        Console.WriteLine("1) Chasser les animaux, 2) Traiter une maladie, 3) Recouvrir le terrain, 4) Passer un jour");   // + eloigner les animaux, recouvrir un terrain, traiter la plante
+        Console.WriteLine("\n - Menu d'actions d'urgence -");
+        Console.WriteLine("1) Chasser les animaux, 2) Traiter une maladie, 3) Désherber, 4) Recouvrir le terrain, 5) Passer un jour");   // + eloigner les animaux, recouvrir un terrain, traiter la plante
         Console.WriteLine("Entrez le numéro de votre choix :");
 
         do
         {
             string reponse = Console.ReadLine()!;
 
-            if (int.TryParse(reponse, out choix) && choix >= 1 && choix <= 4)
+            if (int.TryParse(reponse, out choix) && choix >= 1 && choix <= 5)
             {
                 choixValide = true;
             }
@@ -568,20 +587,22 @@ public class Simulation {
             
             PotagerSimu.Traiter(maladie,t);
         }
+        
+        if (choix == 3)
+        {
+            Terrains terrain = PotagerSimu.ListeTerrains[VerifierNumTerrain()];   // On recupère le terrain choisi
+            PotagerSimu.Desherber(terrain); //On désherbe
+        }
 
-        if (choix == 3)// Couvrir terrain
+        if (choix == 4)// Couvrir terrain
         {
             Terrains t = PotagerSimu.ListeTerrains[VerifierNumTerrain()];
             PotagerSimu.Couvrir(t);
         }
 
-        if (choix == 4) // Passer un jour
+        if (choix == 5) // Passer un jour
         {
             return;
-
         }
-    }
-    
-
-
+    } 
 }

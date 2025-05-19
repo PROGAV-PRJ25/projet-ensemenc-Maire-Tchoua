@@ -34,19 +34,17 @@ public abstract class Terrains {
         NivEau = nivEau;
         Absorption = absorption;
         CapaciteEauMax = capaciteEauMax;
-
     }
 
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne
     {
-        /*
-        // /!\ Controle de la saison de semi avant de planter
+        // Controle de la saison de semi avant de planter
         var saison = ContexteSimulation.SaisonEnCours; //Bizarre ça met hiver par défaut ?!
         if (!plante.SaisonsSemi.Contains(saison))
         {
             Console.WriteLine($"{plante.Nom} ne peut être semé en {saison}.");
             return false;
-        }*/
+        }
         
         // Vérification des bornes
         if (i < 0 || i >= Lignes || j < 0 || j >= Colonnes)
@@ -121,6 +119,54 @@ public abstract class Terrains {
                 SupprimerPlante(p.coordX, p.coordY);
         }
     }
+    
+    /// Mauvaise herbe se propage rapidement, peut envahir toutes les cases et tuer les autres plantes.
+    /// En créer qu'une seule à la fois, méthode pour les propager toutes, après une simulation
+    /// Se propage d'une case adjacente à la fois (aléatoirement)
+    public void PropagerMauvaiseHerbe() // Quand elle pousse elle se propage sur les autres cases du terrain
+    {
+        var aPropager = new List<(int i, int j)>();
+        var rnd = new Random();
+        bool propagationReussie;
+        int newI;
+        int newJ;
+
+        // Collecte positions actuelles de mauvaises herbes si il yen a pas -> ne fait rien (liste vide)
+        for (int i = 0; i < Lignes; i++)
+            for (int j = 0; j < Colonnes; j++)
+                if (grille[i, j] is MauvaiseHerbe)
+                    aPropager.Add((i, j));
+
+        // Pour chaque plante, essayer d'envahir les 8 voisins
+        foreach (var (i, j) in aPropager)
+        {
+            propagationReussie = false;
+            while (propagationReussie == false)
+            {
+                newI = i + rnd.Next(-1,2);
+                newJ = j + rnd.Next(-1,2);
+
+                if (newI != i || newJ != j) 
+                {
+                    if (newI > 0 && newI < Lignes && newJ > 0 && newJ < Colonnes)
+                    {
+                        // Vérifier bornes et présence
+                        if (grille[newI, newJ] == null)
+                        {
+                            Planter(new MauvaiseHerbe(), newI, newJ);
+                        }
+                        else if (!(grille[newI, newJ] is MauvaiseHerbe))
+                        {
+                            //Urgence activée lorsque la mauvaise herbe s'approche dangereusement d'une plante
+                            Console.WriteLine($"Le(la) {grille[newI, newJ].Nom} situé(e) sur le terrain {numTerrain} aux coordonnées ({newI},{newJ}) est menacé(e) par une mauvaise herbe.");
+                            urgenceMauvaiseHerbe = true;
+                        }
+                        propagationReussie = true;
+                    }
+                }
+            }
+        }
+    }
 
     // Affichage
     public void AfficherConsole()
@@ -156,9 +202,9 @@ public abstract class Terrains {
                 Console.Write("---+");
             Console.WriteLine();
         }
-       
+
     }
-    
+
     public override string ToString()
     {
         return $"Terrain de {Type} (Capacité: {Capacite}, Plantes plantées: {ListePlantes.Count})";

@@ -20,13 +20,13 @@ public class Potager
     }
 
     // Actions du joueur sur son potager
-
+    
     public void AjouterTerrain(Terrains terrain) //Demander le type et la taille !
-    {   
+    {
         terrain.numTerrain = index;
         ListeTerrains.Add(terrain);
         Console.WriteLine($"Un terrain de {terrain.Type} et de capacité {terrain.Capacite} a été ajouté.");
-        index ++;
+        index++;
     }
 
     //Arrosage d'un terrain complet
@@ -73,29 +73,27 @@ public class Potager
             
             foreach (var plante in terrain.ListePlantes)
             {
-                Console.WriteLine($"- {plante.Nom} ({plante.coordX},{plante.coordY}) : ");
-                
-                //Etat de santé
-                if (plante.estMalade)
-                    Console.Write("⚠️ atteint de la maladie de ..., ");    //donner le nom de la maladie
-                else
-                    Console.Write("En bonne santé, ");
+                if (!(plante is MauvaiseHerbe))
+                {
+                    Console.WriteLine($"- {plante.Nom} ({plante.coordX},{plante.coordY}) : ");
 
-                //Croissance
-                if (plante.croissanceActuelle > 1)
-                    Console.Write($"croissance terminée (plante mature), ");
-                else
-                    Console.Write($"croissance de {plante.croissanceActuelle}, ");
-                
-                Console.Write($"besoin en eau : {plante.BesoinEau - plante.eauRecu}, "); //SI ratio négatif ne pas arroser
+                    //Etat de santé
+                    if (!plante.estMalade)
+                        Console.Write("En bonne santé, ");
 
-                //Nb de fruits donnés
-                Console.Write($"nombre de fruits : {plante.nbFruitsActuel}. \n");
+                    //Croissance
+                    if (plante.croissanceActuelle > 1)
+                        Console.Write($"croissance terminée (plante mature), ");
+                    else
+                        Console.Write($"croissance de {plante.croissanceActuelle}, ");
 
+                    Console.Write($"besoin en eau : {plante.BesoinEau - plante.eauRecu}, "); //SI ratio négatif ne pas arroser
+
+                    //Nb de fruits donnés
+                    Console.Write($"nombre de fruits : {plante.nbFruitsActuel}. \n");
+                }
             }
-            Console.WriteLine($"Nombre de fruits dans la réserve : {ReserveFraise} fraises, {ReservePomme} pommes");
         }
-         
         Console.WriteLine($"Nombre de fruits dans la réserve : {ReserveFraise} fraises, {ReservePomme} pommes");
     }
 
@@ -107,23 +105,21 @@ public class Potager
         
         Console.WriteLine($"Un {animal.NomA} est apparut sur le Terrain {terrain.numTerrain}");
         Console.WriteLine($"Il est sur cette position : Ligne = {animal.posX}, Colonne = {animal.posY}"); 
-
     }
+    
     public void Impacter(Animaux animal, Terrains terrain) // Un animal apparait sur un terrain du potager
     {
-       
-        if(animal is AnimauxNuisible)
+        if (animal is AnimauxNuisible)
         {
-            if(terrain.grille[animal.posX, animal.posY] != null)
+            if (terrain.grille[animal.posX, animal.posY] != null)
             {
                 Console.WriteLine("Votre plante est en danger !");
                 animal.Nuire(terrain);
             }
             terrain.urgenceAnimaux = true; // Déclanche le mode Urgence même si l'animal n'est pas sur une plante 
         }
-       
-
-        if(terrain.grille[animal.posX,animal.posY] != null && animal is AnimauxUtiles)
+ 
+        if (terrain.grille[animal.posX, animal.posY] != null && animal is AnimauxUtiles)
         {
             Console.WriteLine("Votre plante n'est pas en danger");
             animal.Aider(terrain);
@@ -158,17 +154,19 @@ public class Potager
     {
         MauvaiseHerbe mauvaiseHerbe = new MauvaiseHerbe();
         Random rnd = new Random();
-        mauvaiseHerbe.coordX = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de la maladie
-        mauvaiseHerbe.coordY = rnd.Next(0, terrain.Colonnes);
-        terrain.ListePlantes.Add(mauvaiseHerbe);
-        terrain.grille[mauvaiseHerbe.coordX, mauvaiseHerbe.coordY] = mauvaiseHerbe;
+        int coordX = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de la maladie
+        int coordY = rnd.Next(0, terrain.Colonnes);
+        terrain.Planter(mauvaiseHerbe, coordX, coordY);
         Console.WriteLine($"Une mauvaise herbe est apparue sur le Terrain {terrain.numTerrain}");
         Console.WriteLine($"Elle est sur cette position : ({mauvaiseHerbe.coordX},{mauvaiseHerbe.coordY})");
     }
 
     public void Desherber(Terrains terrain)
     {
-        foreach (Plantes p in terrain.ListePlantes)
+        // Crée une copie « gelée » de la liste au début de la méthode
+        var plantesAVerifier = terrain.ListePlantes.ToList();
+
+        foreach (Plantes p in plantesAVerifier)
         {
             if (p is MauvaiseHerbe)
             {
@@ -176,9 +174,8 @@ public class Potager
             }
         }
         Console.WriteLine($"Terrain numéro {terrain.numTerrain} désherbé !");
-        terrain.urgenceMauvaiseHerbe = false;
+        terrain.urgenceMauvaiseHerbe = false; //Urgence traitée
     }
-
 
     public void Recolter(Terrains terrain)
     {
@@ -276,7 +273,7 @@ public class Potager
     {
         foreach (Terrains t in ListeTerrains)
         {
-            if (t.urgenceAnimaux == true || t.urgenceInondation == true || t.urgenceMaladie == true)
+            if (t.urgenceAnimaux == true || t.urgenceInondation == true || t.urgenceMaladie == true || t.urgenceMauvaiseHerbe == true)
             {
                 urgenceActive = true;
                 break; // Plus besoin de continuer à parcourir la liste

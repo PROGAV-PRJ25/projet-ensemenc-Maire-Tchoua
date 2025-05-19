@@ -70,7 +70,7 @@ public abstract class Plantes
         SaisonFruits = saisonFruits;
     }
 
-     public virtual void Pousser() //Appelé à chaque tour de jeu (simulation)
+     public void Pousser() //Appelé à chaque tour de jeu (simulation)
      {
         if (!estMalade && !estMature && !estMorte) //Si la plante est pas malade ni mature (si elle est mature, plus besoin de pousser)
         {   

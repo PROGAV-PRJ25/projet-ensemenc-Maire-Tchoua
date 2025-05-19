@@ -36,6 +36,7 @@ public class Meteo
                 potager.ApparaitAnimaux(verDeTerre, terrain);
                 potager.Impacter(verDeTerre, terrain);
             }
+
             if ((terrain is Terre || terrain is Sable) && terrain.NivEau > 90) // Le ver de terre apparait sur du sable ou de la terre très humide
             {
                 Escargot escargot = new Escargot();
@@ -50,6 +51,12 @@ public class Meteo
                 potager.ApparaitMaladies(pythium, terrain);
                 terrain.ListeMaladie.Add(pythium);
                 potager.Contaminer(pythium, terrain);
+            }
+
+            if ((terrain is Terre || terrain is Argile) && terrain.NivEau > 70) // Les mauvaises herbes apparaissent sur de la terre ou de l'argile, assez humide
+            {
+                MauvaiseHerbe mh = new MauvaiseHerbe();
+                potager.ApparaitMauvaiseHerbe(terrain); //mauvaise herbe plantée
             }
 
             if (terrain.NivEau > terrain.CapaciteEauMax)
@@ -111,7 +118,6 @@ public class Meteo
         }
     }    
     
-
     public void Greler(Potager potager)
     {
         foreach (Terrains terrain in potager.ListeTerrains)
