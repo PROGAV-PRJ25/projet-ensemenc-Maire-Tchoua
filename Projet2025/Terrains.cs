@@ -16,7 +16,7 @@ public abstract class Terrains {
     public double numTerrain;
 
     public bool urgenceMaladie = false;
-    public bool urgenceInondation =false;
+    public bool urgenceInondation = false;
     public bool urgenceAnimaux = false;
 
     // Constructeur
