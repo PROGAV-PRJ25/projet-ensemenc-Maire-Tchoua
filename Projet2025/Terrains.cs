@@ -173,12 +173,18 @@ public abstract class Terrains {
     {
         ConsoleColor couleur = ConsoleColor.Black; // valeur par défaut
 
-        if (terrain is Sable)
-            couleur = ConsoleColor.DarkYellow;
-        else if (terrain is Terre)
-            couleur = ConsoleColor.Green;
-        else if (terrain is Argile)
-            couleur = ConsoleColor.DarkRed;
+        // Gestion des couleurs 
+        if(terrain.urgenceInondation == true)
+            couleur = ConsoleColor.Blue;
+        else
+        {
+            if (terrain is Sable)
+                couleur = ConsoleColor.DarkYellow;
+            else if (terrain is Terre)
+                couleur = ConsoleColor.Green;
+            else if (terrain is Argile)
+                couleur = ConsoleColor.DarkRed;
+        }
             
         // En-tête colonnes
         Console.Write("   ");

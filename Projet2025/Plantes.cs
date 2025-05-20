@@ -32,6 +32,7 @@ public abstract class Plantes
     public List<Maladies> ListeMaladies {get; set;}
     public int EsperenceVie {get; set;} // en mois mais à convertir en semaine -> depend de l'unité d'un tour (semaines)
     public int NbFruitsMax {get; set;} // nb de fruits produits par le semi au maximum
+    public int NbFruitsSemaine {get; set;}
     public Saisons SaisonFruits {get; set;} // Saison durant laquelle poussent les fruits
 
 
@@ -51,7 +52,7 @@ public abstract class Plantes
     public bool estMature = false;
     public bool estMorte = false;
 
-    protected Plantes(string nom, List<Saisons> saisonsSemi, TypeTerrain terrainPref, int espacement, int place, double vitesseCroissance, int besoinEau, int besoinLum, double tempMax, double tempMin, List<Maladies> listeMaladies, int esperenceVie, int nbFruitsMax, NaturePlante nature, Saisons saisonFruits) {
+    protected Plantes(string nom, List<Saisons> saisonsSemi, TypeTerrain terrainPref, int espacement, int place, double vitesseCroissance, int besoinEau, int besoinLum, double tempMax, double tempMin, List<Maladies> listeMaladies, int esperenceVie, int nbFruitsMax, int nbFruitsSemaine, NaturePlante nature, Saisons saisonFruits) {
 
         Nom = nom;
         SaisonsSemi = saisonsSemi;
@@ -68,6 +69,7 @@ public abstract class Plantes
         NbFruitsMax = nbFruitsMax;
         Nature = nature;
         SaisonFruits = saisonFruits;
+        NbFruitsSemaine = nbFruitsSemaine;
     }
 
      public void Pousser() //Appelé à chaque tour de jeu (simulation)
@@ -109,16 +111,12 @@ public abstract class Plantes
                 Console.WriteLine($"{Nom} est en fin de vie mais comme elle est vivace, elle reprend sa croissance depuis le début.");
             }
         }
+    }
 
-        /*if (SaisonFruits == ContexteSimulation.SaisonEnCours && estMature==true && nbFruitsActuel < NbFruitsMax)
-        {
-            if(Nom == "Fraise")
-                nbFruitsActuel += 5;    //Si les conditions sont remplies, à chaque tours il peut pousser 5 fraises
-
-            if(Nom == "Pomme")
-                nbFruitsActuel += 2;    //Si les conditions sont remplies, à chaque tours il peut pousser 2 pommes
-        }*/
-     }
+    public void DonnerFruit()
+    {
+        nbFruitsActuel += NbFruitsSemaine;
+    }
 
      public virtual bool VerifierConditionsPref()   // (de pousse)
      {
@@ -161,6 +159,10 @@ public abstract class Plantes
                 "Pomme"  => " 🍎",
                 "Fraise" => " 🍓",
                 "MauvaiseHerbe" => " 🌿",
+                "Kiwi" => "🥝",
+                "Poire" => "🍐",
+                "Mangue" => "🥭",
+                "Pasteque" => "🍉",
                 _        => " ★ "
             };
     }

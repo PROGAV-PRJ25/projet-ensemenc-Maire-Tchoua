@@ -5,7 +5,7 @@ public class Simulation {
     private Random rnd = new Random(); //Pas besoin pour l'instant
     public Plantes.Saisons saisonActuelle;
     public double tempActuelle;
-    public List<string> ListePlantes = new List<string> {"pomme","fraise","mauvaise herbe"};   //Liste des types de plantes existantes. A completer en ajoutant les autres plantes!
+    public List<string> ListePlantes = new List<string> {"pomme","fraise","kiwi","mangue","poire","pasteque","mauvaise herbe"};   //Liste des types de plantes existantes. A completer en ajoutant les autres plantes!
     public List<string> ListeTerrains = new List<string> {"terre","argile","sable"}; //Liste des types de terrains existants.
     
     public Potager PotagerSimu { get; }
@@ -39,11 +39,7 @@ public class Simulation {
                 p.Pousser();
                 if ((p.SaisonFruits == saisonActuelle) && (p.estMature) && (p.nbFruitsActuel < p.NbFruitsMax)) // /!\ à la saison de récolte des fruits
                 {
-                    if (p.Nom == "Fraise")
-                        p.nbFruitsActuel += 5;    //Si les conditions sont remplies, à chaque tours il peut pousser 5 fraises
-
-                    else if (p.Nom == "Pomme")
-                        p.nbFruitsActuel += 2;    //Si les conditions sont remplies, à chaque tours il peut pousser 2 pommes
+                    p.DonnerFruit();
                 }
             }
 
@@ -67,22 +63,20 @@ public class Simulation {
         Console.WriteLine($"Jour {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
         Console.WriteLine();
         //Afficher l'origine de l'urgence
-        int indexT = 0;
+        
         foreach (Terrains t in PotagerSimu.ListeTerrains)
         {
             if (t.urgenceAnimaux)
-                Console.WriteLine($"⚠️ Présence d'un animal nuisible sur le terrain {indexT}.");
+                Console.WriteLine($"⚠️ Présence d'un animal nuisible sur le terrain {t.numTerrain}.");
 
             if (t.urgenceMaladie)
-                Console.WriteLine($"⚠️ Présence d'une maladie sur le terrain {indexT}.");
+                Console.WriteLine($"⚠️ Présence d'une maladie sur le terrain {t.numTerrain}.");
 
             if (t.urgenceInondation)
-                Console.WriteLine($"⚠️ Présence d'une innondation sur le terrain {indexT}.");
+                Console.WriteLine($"⚠️ Présence d'une innondation sur le terrain {t.numTerrain}.");
 
             if (t.urgenceMauvaiseHerbe)
-                Console.WriteLine($"⚠️ Présence de mauvaises herbes sur le terrain {indexT}.");
-
-            indexT++;
+                Console.WriteLine($"⚠️ Présence de mauvaises herbes sur le terrain {t.numTerrain}.");
         }
 
         Random rnd = new Random();
@@ -177,7 +171,7 @@ public class Simulation {
             tempActuelle = rnd.Next(5,21);
 
         else if (saisonActuelle == Plantes.Saisons.Eté )
-            tempActuelle = rnd.Next(15,36);
+            tempActuelle = rnd.Next(15,40);
 
         else
             tempActuelle = rnd.Next(0,16);
@@ -363,7 +357,7 @@ public class Simulation {
                 comptActions++;
 
                 //Demander la plante à semer
-                Console.Write("Type de plante à semer (Pomme, Fraise) : ");
+                Console.Write("Type de plante à semer (Pomme, Fraise, Kiwi, Mangue, Poire, Pasteque) : ");
                 do 
                 {
                     do
@@ -385,6 +379,7 @@ public class Simulation {
                     {
                         "pomme" => new Pomme(),
                         "fraise" => new Fraise(),
+                        "kiwi" => new Kiwi(),
                         "mauvaise herbe" => new MauvaiseHerbe()
                     };
 

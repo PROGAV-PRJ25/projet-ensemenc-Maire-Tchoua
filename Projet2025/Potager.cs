@@ -183,7 +183,7 @@ public class Potager
         double nbrFraiseRecolte = 0;
         double nbrPommeRecolte = 0;
 
-        Console.WriteLine("Quel type de fruits voulez-vous récolter (pomme, fraise) ?");
+        Console.WriteLine("Quel type de fruits voulez-vous récolter (pomme, fraise, kiwi, mangue, poire, pasteque) ?");
         string typeFruits = Console.ReadLine()!.ToLower();
 
         foreach (Plantes p in terrain.ListePlantes)
