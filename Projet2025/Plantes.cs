@@ -23,7 +23,7 @@ public abstract class Plantes
     public List<Saisons> SaisonsSemi {get; set;} 
     public TypeTerrain TerrainPref {get; set;}
     public int Espacement {get; set;} //en nombre de cases
-    public int Place {get; set;}    // pareil
+    public int Place {get; set;}  // pareil
     public double VitesseCroissance {get; set;}
     public int BesoinEau {get; set;} // echelle de 1 à 100
     public int BesoinLum {get; set;}
@@ -70,7 +70,7 @@ public abstract class Plantes
         SaisonFruits = saisonFruits;
     }
 
-     public virtual void Pousser() //Appelé à chaque tour de jeu (simulation)
+     public void Pousser() //Appelé à chaque tour de jeu (simulation)
      {
         if (!estMalade && !estMature && !estMorte) //Si la plante est pas malade ni mature (si elle est mature, plus besoin de pousser)
         {   
