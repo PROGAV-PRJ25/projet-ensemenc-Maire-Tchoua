@@ -15,19 +15,19 @@ public class Meteo
         Random rnd = new Random();
         QuantEau = rnd.Next(50,200); // Quantité d'eau tombée sur le potager
         QuantLum = rnd.Next(0,15); // Quantité de lum reçue sur le potager
-
+        
         foreach (Terrains terrain in potager.ListeTerrains)
         {
             // Evolution de l'état du terrain 
-            terrain.NivEau +=  QuantEau - QuantEau*terrain.Absorption; // Le niveau d'eau danns le terrain augmente selon la quantité d'eau qu'il a absorbé
+            terrain.NivEau += QuantEau - QuantEau * terrain.Absorption; // Le niveau d'eau danns le terrain augmente selon la quantité d'eau qu'il a absorbé
             foreach (Plantes p in terrain.ListePlantes)
             {
                 p.eauRecu = terrain.NivEau; // L'eau recu par la plante correspond au niveau d'eau restant dans le terrain
                 p.lumRecu = QuantLum;
             }
-            
+
             ContexteSimulation.TempEnCours -= 3; // On pert 3 degrés quand il pleut
-            terrain.NivEau = terrain.NivEau*0.5;    // On baisse le niveau d'eau après que les plantes ait bu
+            terrain.NivEau = terrain.NivEau * 0.5;    // On baisse le niveau d'eau après que les plantes ait bu
 
             // Obstacles 
             if (terrain is Terre && terrain.NivEau > 60)
@@ -36,6 +36,7 @@ public class Meteo
                 potager.ApparaitAnimaux(verDeTerre, terrain);
                 potager.Impacter(verDeTerre, terrain);
             }
+
             if ((terrain is Terre || terrain is Sable) && terrain.NivEau > 90) // Le ver de terre apparait sur du sable ou de la terre très humide
             {
                 Escargot escargot = new Escargot();
@@ -44,7 +45,7 @@ public class Meteo
                 potager.Impacter(escargot, terrain);
             }
 
-            if(ContexteSimulation.TempEnCours < 5 && terrain.NivEau > 80) // S'il fait trop froid et humide cette maladie apparait 
+            if (ContexteSimulation.TempEnCours < 5 && terrain.NivEau > 80) // S'il fait trop froid et humide cette maladie apparait 
             {
                 Pythium pythium = new Pythium();
                 potager.ApparaitMaladies(pythium, terrain);
@@ -52,7 +53,13 @@ public class Meteo
                 potager.Contaminer(pythium, terrain);
             }
 
-            if(terrain.NivEau > terrain.CapaciteEauMax)
+            if ((terrain is Terre || terrain is Argile) && terrain.NivEau > 70) // Les mauvaises herbes apparaissent sur de la terre ou de l'argile, assez humide
+            {
+                MauvaiseHerbe mh = new MauvaiseHerbe();
+                potager.ApparaitMauvaiseHerbe(terrain); //mauvaise herbe plantée
+            }
+
+            if (terrain.NivEau > terrain.CapaciteEauMax)
             {
                 Console.WriteLine($"Le terrain {terrain.numTerrain} est innondé");
                 terrain.urgenceInondation = true;
@@ -64,6 +71,7 @@ public class Meteo
     {
         Random rnd = new Random();
         QuantLum  = rnd.Next(15,75);
+        int comptIndex = 0;
 
         foreach (Terrains terrain in potager.ListeTerrains) //parcourir la liste des terrains du potager 
         {
@@ -75,8 +83,7 @@ public class Meteo
             }
 
             ContexteSimulation.TempEnCours += 3; // On gagne 3 degrés avec le soleil
-
-
+            
             // Obstacles 
             if (QuantLum > 30)
             {
@@ -111,7 +118,6 @@ public class Meteo
         }
     }    
     
-
     public void Greler(Potager potager)
     {
         foreach (Terrains terrain in potager.ListeTerrains)

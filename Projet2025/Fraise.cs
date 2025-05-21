@@ -13,7 +13,8 @@ public class Fraise : Plantes {
         tempMin : 12, 
         listeMaladies : new List<Maladies>(), 
         esperenceVie : 14, 
-        nbFruitsMax : 100,
+        nbFruitsMax : 45,
+        nbFruitsSemaine : 5,
         nature : NaturePlante.Vivace,
         saisonFruits : Saisons.Printemps
         )
