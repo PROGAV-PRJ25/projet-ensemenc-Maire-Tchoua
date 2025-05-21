@@ -159,10 +159,10 @@ public abstract class Plantes
                 "Pomme"  => " 🍎",
                 "Fraise" => " 🍓",
                 "MauvaiseHerbe" => " 🌿",
-                "Kiwi" => "🥝",
-                "Poire" => "🍐",
-                "Mangue" => "🥭",
-                "Pasteque" => "🍉",
+                "Kiwi" => " 🥝",
+                "Poire" => " 🍐",
+                "Mangue" => " 🥭",
+                "Pasteque" => " 🍉",
                 _        => " ★ "
             };
     }
