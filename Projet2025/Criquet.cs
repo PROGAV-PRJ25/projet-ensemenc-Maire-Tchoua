@@ -2,7 +2,6 @@ public class Criquet : AnimauxNuisible
 {
     public Criquet() : base(nomA : "Criquet", degat : 3)
     {}
-
     public override void Nuire(Terrains terrain) // Divise par 3 la vitesse de croissance de la plante
     {
         foreach (Plantes p in terrain.ListePlantes)
@@ -12,11 +11,9 @@ public class Criquet : AnimauxNuisible
                 if( p.croissanceActuelle > 0.5 && !p.estMature)
                 {    
                     p.VitesseCroissance /= Degat;
-                    Console.WriteLine("La plante pousse moins vite");
+                    Console.WriteLine("Le criquet a affaibli votre plante, elle pousse moins vite");
                 }
             }
-        }  
-
-        
+        }          
     }
 }

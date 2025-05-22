@@ -231,7 +231,6 @@ public abstract class Terrains {
             Console.ResetColor();
             Console.WriteLine();
         }
-
     }
 
     public override string ToString()

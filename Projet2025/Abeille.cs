@@ -1,9 +1,7 @@
 public class Abeille : AnimauxUtiles
 {
     public Abeille() : base (nomA : "Abeille", bienfait : 2)
-    {
-    
-    }
+    {}
 
     public override void Aider(Terrains terrain)  // Ajoute 4 fruits sinon augmente la taille de la plante
     {
@@ -26,9 +24,5 @@ public class Abeille : AnimauxUtiles
                 }
             }
         }  
-       
-    } 
-        
-    
-    
+    }  
 }

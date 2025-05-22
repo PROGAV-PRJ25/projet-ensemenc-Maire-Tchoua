@@ -1,10 +1,8 @@
 public abstract class Maladies {
 
     public string Nom {get; set;}
-    public double ProbabiliteContamination { get; set; }
-
+    public double ProbabiliteContamination {get; set;}
     public double DureeContamination {get; set;}
-
     public int posX;
     public int posY;
 
@@ -30,7 +28,6 @@ public abstract class Maladies {
         posX = newX;
         posY = newY;
         
-        Console.WriteLine($"La maladie s'est propagée sur cette position : Ligne={posX}, Colonne={posY}");
-
+        Console.WriteLine($"{Nom} s'est propagée sur cette position : ({posX},{posY})");
     }
 }

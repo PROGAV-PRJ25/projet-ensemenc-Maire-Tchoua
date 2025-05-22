@@ -134,16 +134,14 @@ public class Simulation {
             }
             else 
             {
-                DateCourante = DateCourante.AddDays(1);
-                ModeUrgence();
-                
-                // Continuer simulation ?  
+                DateCourante = DateCourante.AddDays(1); // Avancer de jour en jour
+                ModeUrgence(); 
             }
 
         } while (continuer);
     }
 
-    public Plantes.Saisons ObtenirSaison(DateTime d)
+    public Plantes.Saisons ObtenirSaison(DateTime d) // Gestion des saisons
     {
         switch (d.Month)
         {
@@ -382,6 +380,7 @@ public class Simulation {
                         "kiwi" => new Kiwi(),
                         "poire" => new Poire(),
                         "pasteque" => new Pasteque(),
+                        "mangue" => new Mangue(),
                         "mauvaise herbe" => new MauvaiseHerbe()
                     };
 

@@ -166,8 +166,4 @@ public abstract class Plantes
                 _        => " ★ "
             };
     }
-
-
-
-
 }

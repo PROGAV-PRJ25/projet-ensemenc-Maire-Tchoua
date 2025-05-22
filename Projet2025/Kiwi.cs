@@ -19,6 +19,4 @@ public class Kiwi : Plantes {
         saisonFruits : Saisons.Eté
         )
     {}
-
-
 }

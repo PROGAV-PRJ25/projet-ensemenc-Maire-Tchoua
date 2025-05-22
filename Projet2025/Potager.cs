@@ -1,6 +1,5 @@
 public class Potager
 {
-    //public string Nom { get; }
     public List<Terrains> ListeTerrains { get; }
     public bool urgenceActive = false;
 
@@ -17,13 +16,12 @@ public class Potager
     // Construteur
     public Potager()
     {
-        //Nom = nom;
         ListeTerrains = new List<Terrains>();
     }
 
     // Actions du joueur sur son potager
     
-    public void AjouterTerrain(Terrains terrain) //Demander le type et la taille !
+    public void AjouterTerrain(Terrains terrain)
     {
         terrain.numTerrain = index;
         ListeTerrains.Add(terrain);
@@ -106,8 +104,7 @@ public class Potager
         animal.posX  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de l'obstacle
         animal.posY = rnd.Next(0, terrain.Colonnes);
         
-        Console.WriteLine($"Un {animal.NomA} est apparut sur le Terrain {terrain.numTerrain}");
-        Console.WriteLine($"Il est sur cette position : Ligne = {animal.posX}, Colonne = {animal.posY}"); 
+        Console.WriteLine($"Un {animal.NomA} est apparut sur le Terrain {terrain.numTerrain}, sa position est : ({animal.posX},{animal.posY})");
     }
     
     public void Impacter(Animaux animal, Terrains terrain) // Un animal apparait sur un terrain du potager
@@ -134,8 +131,7 @@ public class Potager
         Random rnd = new Random();
         maladie.posX  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de la maladie
         maladie.posX = rnd.Next(0, terrain.Colonnes);
-        Console.WriteLine($"La maladie {maladie.Nom} est apparue sur le Terrain {terrain.numTerrain}");
-        Console.WriteLine($"Elle est sur cette position : ({maladie.posX},{maladie.posY})");
+        Console.WriteLine($"La maladie {maladie.Nom} est apparue sur le Terrain {terrain.numTerrain}, sa position est : ({maladie.posX},{maladie.posY})");
     }
     public void Contaminer(Maladies maladie, Terrains terrain)
     {         
@@ -160,8 +156,7 @@ public class Potager
         int coordX = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de la maladie
         int coordY = rnd.Next(0, terrain.Colonnes);
         terrain.Planter(mauvaiseHerbe, coordX, coordY);
-        Console.WriteLine($"Une mauvaise herbe est apparue sur le Terrain {terrain.numTerrain}");
-        Console.WriteLine($"Elle est sur cette position : ({mauvaiseHerbe.coordX},{mauvaiseHerbe.coordY})");
+        Console.WriteLine($"Une mauvaise herbe est apparue sur le Terrain {terrain.numTerrain}, sa position est : ({mauvaiseHerbe.coordX},{mauvaiseHerbe.coordY})");
     }
 
     public void Desherber(Terrains terrain)
@@ -265,6 +260,7 @@ public class Potager
         Console.WriteLine($"Le niveau d'eau du terrain {terrain.numTerrain} diminue");
         if(terrain.NivEau < terrain.CapaciteEauMax) 
         {
+            Console.WriteLine($"Le terrain {terrain.numTerrain} n'est plus inondé");
             terrain.urgenceInondation = false;
         }
     }
@@ -282,8 +278,6 @@ public class Potager
                 urgenceActive = false;
         } 
     }
-
-
 }
 
 
