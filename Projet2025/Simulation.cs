@@ -1,22 +1,22 @@
 using System.Security.Cryptography.X509Certificates;
 
 public class Simulation {
-
-    private Random rnd = new Random(); //Pas besoin pour l'instant
-    public Plantes.Saisons saisonActuelle;
-    public double tempActuelle;
-    public List<string> ListePlantes = new List<string> {"pomme","fraise","kiwi","mangue","poire","pasteque","mauvaise herbe"};   //Liste des types de plantes existantes. A completer en ajoutant les autres plantes!
-    public List<string> ListeTerrains = new List<string> {"terre","argile","sable"}; //Liste des types de terrains existants.
     
-    public Potager PotagerSimu { get; }
-    public Meteo MétéoSimu { get; set; } 
-    public DateTime DateCourante { get; private set; } // Date courante dans la simulation (tour = 1 mois)
+    private Random rnd = new Random(); 
+    private Plantes.Saisons saisonActuelle;
+    private double tempActuelle;
+    private List<string> ListePlantes = new List<string> {"pomme","fraise","kiwi","mangue","poire","pasteque","mauvaise herbe"};   //Liste des types de plantes existantes
+    private List<string> ListeTerrains = new List<string> {"terre","argile","sable"}; //Liste des types de terrains existants
+
+    private Potager PotagerSimu;
+    private Meteo MétéoSimu;
+    private DateTime DateCourante; // Date courante dans la simulation (tour = 1 semaine)
 
     public Simulation(Potager potagerSimu , Meteo météoSimu, DateTime dateCourante)
     {
         PotagerSimu = potagerSimu;
         MétéoSimu = météoSimu;
-        DateCourante = dateCourante; // new DateTime(2025, 1, 1); // date de départ, par ex. 1er janvier 2025
+        DateCourante = dateCourante; //date de départ
     }
 
     private void ModeNormal() // Avance de semaine en semaine
@@ -54,7 +54,7 @@ public class Simulation {
 
     }
 
-    public void ModeUrgence() //Avance de jour en jour
+    private void ModeUrgence() //Avance de jour en jour
     {
         saisonActuelle = ObtenirSaison(DateCourante);
         ContexteSimulation.SaisonEnCours = saisonActuelle; //MàJ dans ContexteSimulation.cs
@@ -62,8 +62,8 @@ public class Simulation {
         // Affichage de la date
         Console.WriteLine($"Jour {DateCourante: dd MMM yyyy} - Saison : {saisonActuelle}");
         Console.WriteLine();
-        //Afficher l'origine de l'urgence
         
+        //Afficher l'origine de l'urgence
         foreach (Terrains t in PotagerSimu.ListeTerrains)
         {
             if (t.urgenceAnimaux)
@@ -105,7 +105,7 @@ public class Simulation {
         
     }
 
-    public void LancerSimulation() // Ou à faire direct dans le Program.cs
+    public void LancerSimulation()
     {
         Console.WriteLine("La simulation va démarrée !");
         bool continuer = true;
@@ -127,7 +127,7 @@ public class Simulation {
                 }
                 else
                 {
-                    // Avancer la date de 7 jours (fin de la semaine) :
+                    // Avance la date de 7 jours (fin de la semaine) :
                     DateCourante = DateCourante.AddDays(7);
                     ModeNormal();   // Relance la simu d'une semaine
                 }
@@ -141,7 +141,7 @@ public class Simulation {
         } while (continuer);
     }
 
-    public Plantes.Saisons ObtenirSaison(DateTime d) // Gestion des saisons
+    private Plantes.Saisons ObtenirSaison(DateTime d) // Gestion des saisons
     {
         switch (d.Month)
         {
@@ -203,7 +203,7 @@ public class Simulation {
     }
 
     // Vérification de saisi du numéro de terrain
-    int VerifierNumTerrain()
+    private int VerifierNumTerrain()
     {
         bool idxValide;
         int index;
@@ -225,7 +225,7 @@ public class Simulation {
         return index;  
     }
 
-    // Gerer les actions du joueur à chaque tour
+    // Gerer les actions du joueur à chaque tour (en mode normal)
     private void ChoisirAction() 
     {  
         bool choixValide = true;
@@ -490,7 +490,7 @@ public class Simulation {
         } while(!maxAtteint);
     }
     
-    public void ChoisirActionUrgente()
+    private void ChoisirActionUrgente()
     {
         bool choixValide;
         int choix;

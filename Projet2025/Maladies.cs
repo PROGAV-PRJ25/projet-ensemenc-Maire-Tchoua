@@ -1,12 +1,12 @@
 public abstract class Maladies {
 
-    public string Nom {get; set;}
-    public double ProbabiliteContamination {get; set;}
+    public string Nom {get;}
+    public double ProbabiliteContamination {get;}
     public double DureeContamination {get; set;}
     public int posX;
     public int posY;
 
-    public Maladies(string nom, double prob, double dureeConta)
+    protected Maladies(string nom, double prob, double dureeConta)
     {
         Nom = nom;
         ProbabiliteContamination = prob;

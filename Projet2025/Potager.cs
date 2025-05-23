@@ -1,22 +1,16 @@
 public class Potager
 {
-    public List<Terrains> ListeTerrains { get; }
+    public List<Terrains> ListeTerrains { get; }    //Liste des terrains présents dans le potager
+    private Dictionary<string,double> StockFruits { get; }   //Stockage des fruits récoltés
+
+    double index = 0;
     public bool urgenceActive = false;
 
-    //A generaliser une liste pour tout les fruits (stockFruits)
-    public double ReserveFraise; // Nombre de fruits dans la reserve
-    public double ReservePomme;
-    public double ReservePoire;
-    public double ReserveMangue;
-    public double ReserveKiwi;
-    public double ReservePasteque;
-    public double ReserveTotale;
-    public double index = 0;
-    
     // Construteur
     public Potager()
     {
         ListeTerrains = new List<Terrains>();
+        StockFruits = new Dictionary<string, double>();
     }
 
     // Actions du joueur sur son potager
@@ -95,7 +89,6 @@ public class Potager
                 }
             }
         }
-        Console.WriteLine($"Fraises : {ReserveFraise}, Pommes : {ReservePomme}, Kiwi : {ReserveKiwi}, Poire : {ReservePoire}, Pastèque : {ReservePasteque}, Total fruits : {ReserveTotale}");
     }
 
     public void ApparaitAnimaux(Animaux animal,Terrains terrain)
@@ -104,7 +97,7 @@ public class Potager
         animal.posX  = rnd.Next(0, terrain.Lignes); // Coordonnées x,y de l'obstacle
         animal.posY = rnd.Next(0, terrain.Colonnes);
         
-        Console.WriteLine($"Un {animal.NomA} est apparut sur le Terrain {terrain.numTerrain}, sa position est : ({animal.posX},{animal.posY})");
+        Console.WriteLine($"Un {animal.NomA} {animal.GetSymboleConsole()} est apparut sur le Terrain {terrain.numTerrain}, sa position est : ({animal.posX},{animal.posY})");
     }
     
     public void Impacter(Animaux animal, Terrains terrain) // Un animal apparait sur un terrain du potager
@@ -177,42 +170,53 @@ public class Potager
 
     public void Recolter(Terrains terrain)
     {
-        double nbrRecolte = 0;
-        
-        Console.WriteLine("Quel type de fruits voulez-vous récolter (pomme, fraise, kiwi, mangue, poire, pasteque) ?");
-        string typeFruits = Console.ReadLine()!.ToLower();
+        //On s'assure qu'il existe des plantes sur le terrain
+        if (terrain.ListePlantes == null)
+        {
+            Console.WriteLine("Erreur : aucune plante à récolter sur ce terrain.");
+            return;
+        }
 
+        //On demande le type de fruit à récolté
+        Console.WriteLine("Quel type de fruits voulez-vous récolter (pomme, fraise, kiwi, mangue, poire, pasteque) ?");
+        string typeFruits = Console.ReadLine()!.ToLower(); //Nom du type du fruit à récolté
+
+        //Calcul de la récolte
+        double récolte = 0;
         foreach (Plantes p in terrain.ListePlantes)
         {
-            if (typeFruits == p.Nom.ToLower() && p.nbFruitsActuel != 0)
+            if (p.Nom.ToLower() == typeFruits && p.nbFruitsActuel > 0)
             {
-                ReserveTotale += p.nbFruitsActuel;
-                nbrRecolte += p.nbFruitsActuel;
-                if(p is Fraise)
-                    ReserveFraise += p.nbFruitsActuel;
-                if(p is Pomme)
-                    ReservePomme += p.nbFruitsActuel;
-                if(p is Poire)
-                    ReservePoire += p.nbFruitsActuel;
-                if(p is Pasteque)
-                    ReservePasteque += p.nbFruitsActuel;
-                if(p is Kiwi)
-                    ReserveKiwi += p.nbFruitsActuel;
-                p.nbFruitsActuel = 0;               
+                récolte += p.nbFruitsActuel;
+                p.nbFruitsActuel = 0;
             }
         }
 
-        if (nbrRecolte == 0)
-            Console.WriteLine($"Il n'y a pas de {typeFruits} à récolter sur le terrain {terrain.numTerrain}");
+        if (récolte == 0)
+        {
+            Console.WriteLine($"Pas de {typeFruits} à récolter ici.");
+            return;
+        }
+        else
+        {
+            //Mise à jour de l’entrée dans le dictionnaire si besoin
+            if (!StockFruits.ContainsKey(typeFruits))
+                StockFruits[typeFruits] = 0;
 
-        Console.WriteLine($"Vous avez récolté {nbrRecolte} {typeFruits} sur le terrain {terrain.numTerrain}");
+            //Ajout de la récolte dans le dictionnaire si besoin
+            StockFruits[typeFruits] += récolte;
 
+            Console.WriteLine($"Vous avez récolté {récolte} {typeFruits}(s).");
+        }
+
+        //Affichage du stock de fruits
         Console.WriteLine($"Souhaitez vous consulter votre stock de fruits ? (oui ou non)");
-        string reponse = Console.ReadLine().ToLower();
+        string reponse = Console.ReadLine()!.ToLower();
         if (reponse == "oui")
         {
-            Console.WriteLine("- Stock de fruits -");
-            Console.WriteLine($"Fraises : {ReserveFraise}, Pommes : {ReservePomme}, Kiwi : {ReserveKiwi}, Poire : {ReservePoire}, Pastèque : {ReservePasteque}, Total fruits : {ReserveTotale}");
+            Console.WriteLine("– Stock de fruits –");
+            foreach (var kv in StockFruits)
+                Console.WriteLine($"{kv.Key.ToUpper()} : {kv.Value}");
         }
     }
 

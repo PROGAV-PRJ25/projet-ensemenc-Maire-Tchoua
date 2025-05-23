@@ -1,6 +1,5 @@
 public abstract class Plantes 
 {
-    
     public enum NaturePlante
     {
         Annuelle,
@@ -18,22 +17,22 @@ public abstract class Plantes
     }
 
     // Infos génériques (pas de variations)
-    public NaturePlante Nature { get; init; }
+    private NaturePlante Nature { get; init; }
     public string Nom {get;}
-    public List<Saisons> SaisonsSemi {get; set;} 
-    public TypeTerrain TerrainPref {get; set;}
-    public int Espacement {get; set;} //en nombre de cases
-    public int Place {get; set;}  // pareil
+    public List<Saisons> SaisonsSemi {get;} 
+    public TypeTerrain TerrainPref {get;}
+    public int Espacement {get;} //en nombre de cases
+    public int Place {get;}  // pareil
     public double VitesseCroissance {get; set;}
-    public int BesoinEau {get; set;} // echelle de 1 à 100
-    public int BesoinLum {get; set;}
-    public double TempMax {get; set;}
-    public double TempMin {get; set;}
+    public int BesoinEau {get;} // echelle de 1 à 100
+    public int BesoinLum {get;}
+    public double TempMax {get;}
+    public double TempMin {get;}
     public List<Maladies> ListeMaladies {get; set;}
-    public int EsperenceVie {get; set;} // en mois mais à convertir en semaine -> depend de l'unité d'un tour (semaines)
-    public int NbFruitsMax {get; set;} // nb de fruits produits par le semi au maximum
-    public int NbFruitsSemaine {get; set;}
-    public Saisons SaisonFruits {get; set;} // Saison durant laquelle poussent les fruits
+    public int EsperenceVie {get;} // en mois mais à convertir en semaine -> depend de l'unité d'un tour (semaines)
+    public int NbFruitsMax {get;} // nb de fruits produits par le semi au maximum
+    public int NbFruitsSemaine {get;} // nb de fruits produits par semaine (tour), si on est dans la bonne saison
+    public Saisons SaisonFruits {get;} // Saison durant laquelle poussent les fruits
 
 
     //Infos dépendants de la simulation (tours de jeu)
@@ -97,8 +96,7 @@ public abstract class Plantes
         {
             if (Nature == NaturePlante.Annuelle)
             {
-                //Supp la plante dans le terrain -> A gerer dans classe Terrain -> VerifierEtatPlantes()
-                estMorte = true;
+                estMorte = true; // Puis la plante est supprimée du terrain -> voir Terrains -> VerifierEtatPlantes()
                 Console.WriteLine($"{Nom} est en fin de vie.");
             }
             else // Si elle est vivace, elle reprendra sa croissance au printemps prochain /!\
@@ -112,7 +110,6 @@ public abstract class Plantes
             }
         }
     }
-
     public void DonnerFruit()
     {
         nbFruitsActuel += NbFruitsSemaine;
@@ -120,7 +117,7 @@ public abstract class Plantes
 
      public virtual bool VerifierConditionsPref()   // (de pousse)
      {
-        int nbConditionsValides = 0;    //Faire le ration sur le nb de conditions totales à valider : besoin en eau et lumière, terrain pref, temp pref, 
+        int nbConditionsValides = 0;  
         int nbConditionsMax = 4;
         double ratio;
         tempActuelle = ContexteSimulation.TempEnCours;
@@ -134,7 +131,7 @@ public abstract class Plantes
         if (lumRecu/BesoinLum >= 1)     //Assez de lumière
             nbConditionsValides ++;
 
-        if ((tempActuelle >= TempMin) && (tempActuelle <= TempMax))     //Temp OK
+        if ((tempActuelle >= TempMin) && (tempActuelle <= TempMax))     //Température OK
             nbConditionsValides ++; 
 
         ratio = nbConditionsValides/nbConditionsMax;
