@@ -23,7 +23,6 @@ public abstract class AnimauxNuisible : Animaux
         posX = newX;
         posY = newY;
         
-        
-        Console.WriteLine($"L'animal s'est déplacé sur cette position : Ligne={posX}, Colonne={posY}"); 
+        Console.WriteLine($"{NomA} s'est déplacé(e) sur cette position : ({posX},{posY})"); 
     }
 }

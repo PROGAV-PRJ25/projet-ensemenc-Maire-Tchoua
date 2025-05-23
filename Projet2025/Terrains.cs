@@ -16,7 +16,7 @@ public abstract class Terrains {
     public double numTerrain;
 
     public bool urgenceMaladie = false;
-    public bool urgenceInondation =false;
+    public bool urgenceInondation = false;
     public bool urgenceAnimaux = false;
     public bool urgenceMauvaiseHerbe = false;
 
@@ -169,8 +169,23 @@ public abstract class Terrains {
     }
 
     // Affichage
-    public void AfficherConsole()
+    public void AfficherConsole(Terrains terrain)
     {
+        ConsoleColor couleur = ConsoleColor.Black; // valeur par défaut
+
+        // Gestion des couleurs 
+        if(terrain.urgenceInondation == true)
+            couleur = ConsoleColor.Blue;
+        else
+        {
+            if (terrain is Sable)
+                couleur = ConsoleColor.DarkYellow;
+            else if (terrain is Terre)
+                couleur = ConsoleColor.Green;
+            else if (terrain is Argile)
+                couleur = ConsoleColor.DarkRed;
+        }
+            
         // En-tête colonnes
         Console.Write("   ");
         for (int j = 0; j < Colonnes; j++)
@@ -178,31 +193,44 @@ public abstract class Terrains {
         Console.WriteLine();
 
         // Ligne séparatrice
-        Console.Write("  +");
+        Console.Write($"  ");
+        Console.BackgroundColor = couleur;
+        Console.Write("+");
         for (int j = 0; j < Colonnes; j++)
             Console.Write("---+");
+        Console.ResetColor();
         Console.WriteLine();
+        
 
         // Chaque ligne
         for (int i = 0; i < Lignes; i++)
-        {
+        {   
             // Contenu des cases
-            Console.Write($"{i} |");
+            Console.Write($"{i}");
+            Console.Write(" ");
+            Console.BackgroundColor = couleur;
+            Console.Write($"|");
             for (int j = 0; j < Colonnes; j++)
             {
                 var p = grille[i, j];
                 string symbole = p != null ? p.GetSymboleConsole() : "   ";
                 Console.Write(symbole + "|");
             }
+            Console.ResetColor();
             Console.WriteLine();
 
             // Séparateur de fin de ligne
-            Console.Write("  +");
+            Console.Write("  ");
+            Console.BackgroundColor = couleur;
+            Console.Write("+");
             for (int j = 0; j < Colonnes; j++)
+            {
+                Console.BackgroundColor = couleur;
                 Console.Write("---+");
+            }
+            Console.ResetColor();
             Console.WriteLine();
         }
-
     }
 
     public override string ToString()

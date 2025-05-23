@@ -22,7 +22,7 @@ public class Meteo
             terrain.NivEau += QuantEau - QuantEau * terrain.Absorption; // Le niveau d'eau danns le terrain augmente selon la quantité d'eau qu'il a absorbé
             foreach (Plantes p in terrain.ListePlantes)
             {
-                p.eauRecu = terrain.NivEau; // L'eau recu par la plante correspond au niveau d'eau restant dans le terrain
+                p.eauRecu = terrain.NivEau; // L'eau reçu par la plante correspond au niveau d'eau restant dans le terrain
                 p.lumRecu = QuantLum;
             }
 
@@ -71,7 +71,6 @@ public class Meteo
     {
         Random rnd = new Random();
         QuantLum  = rnd.Next(15,75);
-        int comptIndex = 0;
 
         foreach (Terrains terrain in potager.ListeTerrains) //parcourir la liste des terrains du potager 
         {
@@ -100,7 +99,7 @@ public class Meteo
                 potager.Impacter(criquet, terrain); // Alors un criquet apparait
             }  
 
-            if((ContexteSimulation.SaisonEnCours is Plantes.Saisons.Printemps) && (ContexteSimulation.TempEnCours > 15))   // Au printemps les oiseaux apparaissent 
+            if((ContexteSimulation.SaisonEnCours is Plantes.Saisons.Printemps) && (ContexteSimulation.TempEnCours > 15) && (terrain is Argile))   // Au printemps les oiseaux apparaissent 
             {
                 Oiseaux oiseaux = new Oiseaux();
                 potager.ApparaitAnimaux(oiseaux, terrain);
@@ -132,7 +131,5 @@ public class Meteo
                     p.nbFruitsActuel = 0;
             } 
         }
-        
-        
     }
 }
