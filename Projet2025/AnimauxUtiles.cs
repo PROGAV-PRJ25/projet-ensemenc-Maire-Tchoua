@@ -1,7 +1,7 @@
 public abstract class AnimauxUtiles : Animaux
 {
-    public int Bienfait {get; set;}
-    public AnimauxUtiles(string nomA, int bienfait) : base(nomA)
+    protected int Bienfait{ get;}
+    protected AnimauxUtiles(string nomA, int bienfait) : base(nomA)
     {
         Bienfait = bienfait;
     }

@@ -14,7 +14,7 @@ public class Meteo
     {
         Random rnd = new Random();
         QuantEau = rnd.Next(50,200); // Quantité d'eau tombée sur le potager
-        QuantLum = rnd.Next(0,15); // Quantité de lum reçue sur le potager
+        QuantLum = rnd.Next(0,15); // Quantité de lumière reçue sur le potager
         
         foreach (Terrains terrain in potager.ListeTerrains)
         {
@@ -29,14 +29,14 @@ public class Meteo
             ContexteSimulation.TempEnCours -= 3; // On pert 3 degrés quand il pleut
             terrain.NivEau = terrain.NivEau * 0.5;    // On baisse le niveau d'eau après que les plantes ait bu
 
-            // Obstacles 
             if (terrain is Terre && terrain.NivEau > 60)
             {
                 VerDeTerre verDeTerre = new VerDeTerre();
                 potager.ApparaitAnimaux(verDeTerre, terrain);
-                potager.Impacter(verDeTerre, terrain);
+                potager.Impacter(verDeTerre, terrain);  //Impacte positif car le verre de terre est un animal utile (bénéfique)
             }
 
+            // Obstacles 
             if ((terrain is Terre || terrain is Sable) && terrain.NivEau > 90) // Le ver de terre apparait sur du sable ou de la terre très humide
             {
                 Escargot escargot = new Escargot();
@@ -83,14 +83,14 @@ public class Meteo
 
             ContexteSimulation.TempEnCours += 3; // On gagne 3 degrés avec le soleil
             
-            // Obstacles 
             if (QuantLum > 30)
             {
                 Abeille abeille = new Abeille();
                 potager.ApparaitAnimaux(abeille, terrain);
                 potager.Impacter(abeille, terrain); // une abeille apparait peu importe le terrain 
             }
-                
+
+            // Obstacles 
             if (terrain is Sable && terrain.NivEau < 15) // si le terrain est du sable et qu'il est très sec
             {
                 Criquet criquet = new Criquet();

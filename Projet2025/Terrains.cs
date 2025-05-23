@@ -1,18 +1,18 @@
 using System.Runtime.CompilerServices;
 
 public abstract class Terrains {
-    public double Absorption {get;set;}
-    public double NivEau {get; set;}
-    public double CapaciteEauMax {get; set;}
-    public int Lignes { get; protected set; }
-    public int Colonnes { get; protected set; } 
-    public int Capacite {get;} // Nombre de plantes max (nb de cases)
-    public Plantes.TypeTerrain Type { get; protected set; } // Type de terrain 
+    public double Absorption{ get; }
+    public double NivEau { get; set; }
+    public double CapaciteEauMax { get; }
+    public int Lignes{ get; }
+    public int Colonnes{ get; }
+    public int Capacite { get; } // Nombre de plantes max (nb de cases)
+    public Plantes.TypeTerrain Type { get; } // Type de terrain 
     public List<Plantes> ListePlantes {get; set;} // Liste des plantes plantées dans le terrain
     public List<AnimauxNuisible> ListeAnimauxNuisibles {get; set;} // Liste des animaux actuellement sur le terrain
     public List<Maladies> ListeMaladie {get; set;}
 
-    public Plantes[,] grille;   //Matrice des plantes pour gérer positions et espacement
+    public Plantes[,] grille;   // Matrice des plantes pour gérer positions et espacement
     public double numTerrain;
 
     public bool urgenceMaladie = false;
@@ -25,7 +25,7 @@ public abstract class Terrains {
     {
         Lignes = lignes;
         Colonnes = colonnes;
-        Capacite = Lignes * Colonnes; //pas necessaire?
+        Capacite = Lignes * Colonnes;
         Type = type;
         ListePlantes = new List<Plantes>();
         ListeAnimauxNuisibles = new List<AnimauxNuisible>();
@@ -39,7 +39,7 @@ public abstract class Terrains {
     public bool Planter(Plantes plante, int i, int j)   //i : ligne, j : colonne
     {
         // Controle de la saison de semi avant de planter
-        var saison = ContexteSimulation.SaisonEnCours; //Bizarre ça met hiver par défaut ?!
+        var saison = ContexteSimulation.SaisonEnCours;
         if (!plante.SaisonsSemi.Contains(saison))
         {
             Console.WriteLine($"{plante.Nom} ne peut être semé en {saison}.");
@@ -82,7 +82,7 @@ public abstract class Terrains {
         }
         
         // Tout est OK, on plante
-        plante.terrainActuel = Type;   // On dit à la plante dans quelle terrain elle est plantée
+        plante.terrainActuel = Type;   // On dit à la plante dans quelle type de terrain elle est plantée (pour vérifier les conditions de croissance)
         plante.coordX = i;  // On récupère les coordonnées dans la classe Plante
         plante.coordY = j;
         grille[i, j] = plante;
@@ -94,10 +94,11 @@ public abstract class Terrains {
     public bool SupprimerPlante(int i, int j)
     {
         var plante = grille[i, j];
-        if (plante == null)
-            return false;              // rien à supprimer
 
-        // Retirer les coordonnées dans plantes... ?
+        // Si rien à supprimer
+        if (plante == null)
+            return false;              
+
         plante.estMorte = true;
 
         // Retrait de la grille
@@ -121,9 +122,8 @@ public abstract class Terrains {
     }
     
     /// Mauvaise herbe se propage rapidement, peut envahir toutes les cases et tuer les autres plantes.
-    /// En créer qu'une seule à la fois, méthode pour les propager toutes, après une simulation
     /// Se propage d'une case adjacente à la fois (aléatoirement)
-    public void PropagerMauvaiseHerbe() // Quand elle pousse elle se propage sur les autres cases du terrain
+    public void PropagerMauvaiseHerbe()
     {
         var aPropager = new List<(int i, int j)>();
         var rnd = new Random();
