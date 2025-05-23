@@ -61,7 +61,7 @@ public class Potager
 
         foreach (var terrain in ListeTerrains)
         {
-            Console.WriteLine($"Terrain numéro {terrain.numTerrain} de type {terrain.Type}.");
+            Console.WriteLine($"\n Terrain numéro {terrain.numTerrain} de type {terrain.Type}.");
             
             terrain.AfficherConsole(terrain);
             
