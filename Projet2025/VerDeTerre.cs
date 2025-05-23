@@ -1,10 +1,7 @@
 public class VerDeTerre : AnimauxUtiles
 {
     public VerDeTerre() : base (nomA : "VerDeTerre", bienfait : 2)
-    {
-    
-    }
-
+    {}
     public override void Aider(Terrains terrain) 
     {
         foreach (Plantes p in terrain.ListePlantes)
@@ -17,10 +14,6 @@ public class VerDeTerre : AnimauxUtiles
                     Console.WriteLine("La plante pousse plus vite");
                 }
             }
-        } 
-        
-    }   
-        
-    
-    
+        }  
+    }     
 }

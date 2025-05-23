@@ -5,6 +5,5 @@ public abstract class AnimauxUtiles : Animaux
     {
         Bienfait = bienfait;
     }
-
     public override abstract void Aider(Terrains terrain);
 }
